@@ -1,0 +1,497 @@
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */
+/* Reset et base */
+* {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Styles pour le sidebar */
+.app-sidebar {
+  width: 250px;
+  min-height: 100vh;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(0);
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  flex: 1;
+  margin-left: 250px; /* Largeur du sidebar par défaut */
+  transition: all 0.3s ease-in-out;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Quand le sidebar est fermé */
+.content-wrapper.sidebar-collapsed {
+  margin-left: 0;
+}
+
+/* Quand le sidebar est ouvert */
+.content-wrapper.sidebar-open {
+  margin-left: 250px;
+}
+
+/* Contenu principal */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Sur mobile */
+@media (max-width: 767.98px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+  }
+  
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  
+  .content-wrapper {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+  
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}
+
+/* Sur desktop */
+@media (min-width: 768px) {
+  .sidebar-overlay {
+    display: none !important;
+  }
+  
+  /* Animation smooth pour le sidebar */
+  .app-sidebar:not(.sidebar-open) {
+    transform: translateX(-100%);
+    width: 250px;
+  }
+  
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  
+  /* Ajustement du content-wrapper quand le sidebar est fermé */
+  .content-wrapper:not(.sidebar-open) {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .content-wrapper.sidebar-open {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+}
+
+/* Styles pour le header */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  height: 60px;
+}
+
+/* Ajustement du content pour le header fixe */
+.content-wrapper {
+  margin-top: 60px;
+}
+
+/* Assurer que le footer reste en bas */
+.main-footer {
+  margin-left: 250px;
+  transition: all 0.3s ease-in-out;
+}
+
+.content-wrapper.sidebar-collapsed + .main-footer {
+  margin-left: 0;
+}
+
+@media (max-width: 767.98px) {
+  .main-footer {
+    margin-left: 0 !important;
+  }
+}
+
+/* Debug CSS - à retirer après correction */
+/* .nav-sidebar .nav-link {
+  border: 1px solid red;
+}
+
+.nav-sidebar .nav-icon {
+  border: 1px solid blue;
+}
+
+.nav-sidebar .nav-link p {
+  border: 1px solid green;
+} ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  */ 
+
+/* Correction spécifique pour l'alignement vertical */
+/* .nav-sidebar .nav-link {
+  display: flex;
+  align-items: center; Alignement vertical central
+  padding: 0.75rem 1rem;
+  min-height: 2.5rem;
+}
+
+.nav-sidebar .nav-icon {
+  width: 1.5rem;
+  min-width: 1.5rem; Empêche la réduction
+  height: 1.5rem;
+  display: flex;
+  align-items: center; Centre verticalement dans son conteneur
+  justify-content: center; Centre horizontalement
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  line-height: 1; Reset du line-height
+}
+
+.nav-sidebar .nav-link p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  flex: 1;
+  display: flex;
+  align-items: center; Aligne le texte avec l'icône
+  height: 100%; Prend toute la hauteur disponible
+}
+
+Version encore plus précise
+.nav-sidebar .nav-link {
+  display: flex;
+  align-items: stretch; Étire les enfants sur toute la hauteur
+  padding: 0.75rem 1rem;
+  min-height: 2.5rem;
+}
+
+.nav-sidebar .nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  Force l'alignement avec le texte
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.nav-sidebar .nav-link p {
+  display: flex;
+  align-items: center; Centre le texte verticalement
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  flex: 1;
+  Reset des marges internes
+  margin-top: 0;
+  margin-bottom: 0;
+} ////////////////////////////////////////////////////////////////////////////// */
+
+/* Structure principale */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+
+/* Sidebar avec défilement forcé */
+.app-sidebar {
+  width: 250px;
+  height: 100vh; /* Prend toute la hauteur de la vue */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1030;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  background-color: #343a40;
+}
+
+.app-sidebar.sidebar-open {
+  transform: translateX(0);
+}
+
+/* Brand/Logo fixe en haut */
+.sidebar-brand {
+  flex-shrink: 0;
+  padding: 1rem;
+  border-bottom: 1px solid #4b545c;
+  background-color: #343a40;
+  z-index: 1;
+}
+
+/* Contenu scrollable du sidebar - FORCER LE DÉFILEMENT */
+.sidebar-wrapper {
+  flex: 1;
+  overflow-y: auto !important; /* Forcer le défilement */
+  overflow-x: hidden;
+  height: calc(100vh - 80px); /* Hauteur calculée pour forcer le scroll */
+  min-height: 0; /* Important pour flex */
+}
+
+/* Personnalisation visible de la barre de défilement */
+.sidebar-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-track {
+  background: #2c3136;
+  border-radius: 4px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-thumb {
+  background: #6c757d;
+  border-radius: 4px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+/* Pour Firefox */
+.sidebar-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #2c3136;
+}
+
+/* Navigation */
+.sidebar-wrapper .nav-sidebar {
+  min-height: min-content; /* Permet au contenu de définir la hauteur */
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+  /* margin-left: 250px; */
+  /* margin-left: 0; */
+   margin-left: 0 !important;
+   width: 100% !important;
+  /* width: 100%; */
+}
+
+.main-content.sidebar-open {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+}
+
+/* Reste du CSS inchangé... */
+
+.main-content.sidebar-collapsed {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Header fixe */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  flex-shrink: 0;
+}
+
+/* Content wrapper avec défilement */
+.content-wrapper {
+  flex: 1;
+  background-color: #f4f6f9;
+  overflow-y: auto; /* Défilement pour le contenu principal */
+  overflow-x: hidden;
+}
+
+.content {
+  padding: 20px;
+  min-height: calc(100vh - 120px);
+}
+
+/* Footer */
+.main-footer {
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+/* ===== CORRECTIONS ALIGNEMENT ICÔNES ===== */
+.nav-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  min-height: 2.5rem;
+  line-height: normal;
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}
+
+.nav-sidebar .nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0; /* Empêche la réduction */
+}
+
+.nav-sidebar .nav-link p {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
+  vertical-align: middle;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-sidebar .nav-arrow {
+  margin-left: auto;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.nav-item.menu-open .nav-arrow {
+  transform: rotate(90deg);
+}
+
+/* Styles pour les sous-menus */
+.nav-treeview {
+  padding-left: 1rem;
+}
+
+.nav-treeview .nav-link {
+  padding-left: 2rem !important;
+}
+
+.nav-treeview .nav-icon {
+  font-size: 0.6rem;
+  width: 1rem;
+}
+
+/* Overlay pour mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1019;
+  display: none;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Mobile */
+@media (max-width: 767.98px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  
+  /* .main-content.sidebar-open {
+    margin-left: 0 !important;
+    width: 100% !important;
+  } */
+
+  .main-content.sidebar-open {
+  margin-left: 250px;
+  /* width: calc(100% - 250px); */
+}
+
+  
+  .sidebar-overlay {
+    display: block;
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .sidebar-overlay {
+    display: none !important;
+  }
+}
+
+/* Debug temporaire */
+/* .sidebar-wrapper {
+  border: 2px solid red; Pour voir la zone de défilement
+}
+
+.app-sidebar {
+  border: 2px solid blue; Pour voir le conteneur
+} */

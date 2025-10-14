@@ -1,0 +1,168 @@
+/* src/pages/RH/Organisation/OrgChart.css */
+.org-chart-container {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.org-chart-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.org-chart-header h1 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 2.5rem;
+}
+
+.org-chart-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.org-chart-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.department-tree {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.department-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e8e8e8;
+}
+
+.department-header h2 {
+  color: #34495e;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.employee-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  min-width: 200px;
+}
+
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  border-color: #1890ff;
+}
+
+.manager-card {
+  border-color: #1890ff;
+  background: linear-gradient(135deg, #f8fbff 0%, #e6f7ff 100%);
+}
+
+.employee-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px;
+}
+
+.employee-avatar {
+  margin-bottom: 12px;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.employee-info {
+  width: 100%;
+}
+
+.employee-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.employee-position {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.team-size {
+  font-size: 11px;
+  color: #1890ff;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.org-chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 32px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #5d6d7e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .org-chart-container {
+    padding: 16px;
+  }
+  
+  .org-chart-header h1 {
+    font-size: 2rem;
+  }
+  
+  .department-tree {
+    padding: 16px;
+  }
+  
+  .employee-card {
+    min-width: 160px;
+  }
+}
+
+/* Animation pour les nouveaux nœuds */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.employee-card {
+  animation: fadeInUp 0.5s ease-out;
+}
