@@ -18,6 +18,11 @@ import GestionRetards from "../RH/Employe/Presence/GestionRetards";
 import StatistiquesPresence from "../RH/Employe/Presence/StatistiquesPresence";
 import ConfigurationPresence from "../RH/Employe/Presence/ConfigurationPresence";
 import Competences from "../RH/Employe/Competences_formations/Competences";
+import PlanningFormations from "../RH/Employe/Competences_formations/PlanningFormations";
+import SyntheseCarriere from "../RH/Employe/Mouvements/SyntheseCarriere";
+import HistoriqueMouvements from "../RH/Employe/Mouvements/HistoriqueMouvements";
+import InventaireMouvements from "../RH/Employe/Mouvements/InventaireMouvements";
+import ArchivesMouvements from "../RH/Employe/Mouvements/ArchivesMouvements";
 
 const RouterRH = () => {
     return (
@@ -41,6 +46,11 @@ const RouterRH = () => {
                 <Route path="presence/stat" element={<StatistiquesPresence />} />
                 <Route path="presence/conf" element={<ConfigurationPresence />} />
                 <Route path="competence/comp" element={<Competences />} />
+                <Route path="competence/planningFormations" element={<PlanningFormations />} />
+                <Route path="mouvement/synthese" element={<SyntheseCarriere />} />
+                <Route path="mouvement/historique" element={<HistoriqueMouvements />} />
+                <Route path="mouvement/inventaire" element={<InventaireMouvements />} />
+                <Route path="mouvement/archive" element={<ArchivesMouvements />} />
             </Route>
         </Routes>
     );
