@@ -185,12 +185,51 @@ export default function Sidebar() {
                       <p>Calendrier de présence</p>
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link to="/presence/pointage" className="nav-link">
+                   <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/calendrier_presence_v1" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
-                      <p>Pointage</p>
+                      <p>Calendrier de présence_version 1</p>
                     </Link>
                   </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/statMensuel" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Statistique mensuel</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/heure_travaillee" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Heures travaillées</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/historiquePointage" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Historique pointage</p>
+                    </Link>
+                  </li>
+                  
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/retard" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Gestion de retard</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/stat" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Statistique de présence</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/presence/conf" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Configuration de présence</p>
+                    </Link>
+                  </li>
+                  
+                  
                   <li className="nav-item">
                     <Link to="/presence/conges" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
@@ -223,7 +262,7 @@ export default function Sidebar() {
                 </a>
                 <ul className="nav nav-treeview" style={{ display: openSections.competences ? 'block' : 'none' }}>
                   <li className="nav-item">
-                    <Link to="/competences/inventaire" className="nav-link">
+                    <Link to="/dashboard-RH/competence/comp" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Inventaire compétences</p>
                     </Link>
