@@ -11,6 +11,13 @@ import DepartmentsManagers from "../RH/Employe/Organisation_Hierarchie/Departmen
 import OrgChart from "../RH/Employe/Organisation_Hierarchie/OrgChart";
 import CalendrierPresence from "../RH/Employe/Presence/Calendrier_presence";
 import PointageManuel from "../RH/Employe/Presence/Pointage";
+import StatistiquesMensuellesPresence from "../RH/Employe/Presence/StatistiquesMensuellesPresence";
+import HeuresTravaillees from "../RH/Employe/Presence/HeuresTravaillees";
+import HistoriquePointage from "../RH/Employe/Presence/HistoriquePointage";
+import GestionRetards from "../RH/Employe/Presence/GestionRetards";
+import StatistiquesPresence from "../RH/Employe/Presence/StatistiquesPresence";
+import ConfigurationPresence from "../RH/Employe/Presence/ConfigurationPresence";
+import Competences from "../RH/Employe/Competences_formations/Competences";
 
 const RouterRH = () => {
     return (
@@ -26,6 +33,14 @@ const RouterRH = () => {
                 <Route path="organisation/hierarchie" element={<OrgChart />} />
                 <Route path="presence/calendrier" element={<CalendrierPresence />} />
                 <Route path="presence/pointage" element={<PointageManuel />} />
+                <Route path="presence/statMensuel" element={<StatistiquesMensuellesPresence />} />
+                <Route path="presence/calendrier_presence_v1" element={<CalendrierPresence />} />
+                <Route path="presence/heure_travaillee" element={<HeuresTravaillees />} />
+                <Route path="presence/historiquePointage" element={<HistoriquePointage />} />
+                <Route path="presence/retard" element={<GestionRetards/>} />
+                <Route path="presence/stat" element={<StatistiquesPresence />} />
+                <Route path="presence/conf" element={<ConfigurationPresence />} />
+                <Route path="competence/comp" element={<Competences />} />
             </Route>
         </Routes>
     );

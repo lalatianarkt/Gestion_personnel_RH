@@ -21,5 +21,5 @@ public class UserController {
             return "Erreur lors de la création: " + e.getMessage();
         }
     }
-}
+} 
 
