@@ -268,7 +268,7 @@ export default function Sidebar() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to="/competences/planning" className="nav-link">
+                    <Link to="/dashboard-RH/competence/planningFormations" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Planning formations</p>
                     </Link>
@@ -336,19 +336,26 @@ export default function Sidebar() {
                 </a>
                 <ul className="nav nav-treeview" style={{ display: openSections.historique ? 'block' : 'none' }}>
                   <li className="nav-item">
-                    <Link to="/historique/mouvements" className="nav-link">
+                    <Link to="/dashboard-RH/mouvement/historique" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Historique mouvements</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/dashboard-RH/mouvement/synthese" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Vue d'ensemble mouvements</p>
                     </Link>
                   </li>
+                  
                   <li className="nav-item">
-                    <Link to="/historique/inventaire" className="nav-link">
+                    <Link to="/dashboard-RH/mouvement/inventaire" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Inventaire mouvements</p>
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to="/historique/archives" className="nav-link">
+                    <Link to="/dashboard-RH/mouvement/archive" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Archives</p>
                     </Link>
