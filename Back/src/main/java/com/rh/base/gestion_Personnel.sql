@@ -324,3 +324,19 @@ CREATE TABLE departement_emp(
    FOREIGN KEY(id) REFERENCES Employe(id),
    FOREIGN KEY(id_1) REFERENCES Departement(id)
 );
+
+CREATE TABLE employe_compte_conge(
+   id VARCHAR(50) ,
+   id_1 INTEGER,
+   PRIMARY KEY(id, id_1),
+   FOREIGN KEY(id) REFERENCES Employe(id),
+   FOREIGN KEY(id_1) REFERENCES Compte_conge(id)
+);
+
+CREATE TABLE solde_conge_employe(
+   id VARCHAR(50) ,
+   id_1 INTEGER,
+   PRIMARY KEY(id, id_1),
+   FOREIGN KEY(id) REFERENCES Employe(id),
+   FOREIGN KEY(id_1) REFERENCES Solde_conge(id)
+);
