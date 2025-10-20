@@ -242,6 +242,10 @@ CREATE TABLE Token(
    id SERIAL,
    token_genere VARCHAR(255)  NOT NULL,
    duree_expiration VARCHAR(50) ,
+   type VARCHAR(150) ,
+   created_at TIMESTAMP NOT NULL,
+   expires_at TIMESTAMP,
+   is_active INTEGER,
    id_1 VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_1) REFERENCES Users(id)
@@ -323,20 +327,4 @@ CREATE TABLE departement_emp(
    PRIMARY KEY(id, id_1),
    FOREIGN KEY(id) REFERENCES Employe(id),
    FOREIGN KEY(id_1) REFERENCES Departement(id)
-);
-
-CREATE TABLE employe_compte_conge(
-   id VARCHAR(50) ,
-   id_1 INTEGER,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES Employe(id),
-   FOREIGN KEY(id_1) REFERENCES Compte_conge(id)
-);
-
-CREATE TABLE solde_conge_employe(
-   id VARCHAR(50) ,
-   id_1 INTEGER,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES Employe(id),
-   FOREIGN KEY(id_1) REFERENCES Solde_conge(id)
 );

@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "infos_administratives")
-public class InfosAdministratives {
-    
+public class InfosAdministratives { 
     @Id
     @Column(name = "id", length = 50)
     private String id;

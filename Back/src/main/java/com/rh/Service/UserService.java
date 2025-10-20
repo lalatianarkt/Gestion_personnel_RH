@@ -1,8 +1,10 @@
 package com.rh.Service;
 
 import com.rh.Model.User;
-import com.rh.Repositories.UserRepository;
+import com.rh.Repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,10 +35,30 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    // public User isAuthentified(User user){
-    //     User user = new User();
+    public User authenticate(User userRequest) {
+        // 1️⃣ Récupérer l'utilisateur par email
+        Optional<User> optionalUser = userRepository.findByEmail(userRequest.getEmail());
         
+        if (optionalUser.isEmpty()) {
+            System.out.println("⚠️ Aucun utilisateur trouvé avec cet email !");
+            return null;
+        }
 
-    //     return user;
-    // }
+        User utilisateur = optionalUser.get();
+
+        // 2️⃣ Vérifier le mot de passe (BCrypt)
+        if (!BCrypt.checkpw(userRequest.getPassword(), utilisateur.getPassword())) {
+            System.out.println("❌ Mot de passe incorrect !");
+            return null;
+        }
+
+        // 3️⃣ Retourner l'utilisateur trouvé
+        return utilisateur;
+    }
+
+
+
+    
+
+    
 }
