@@ -70,6 +70,9 @@ CREATE TABLE Users(
    FOREIGN KEY(id_employe) REFERENCES Employe(id)
 );
 
+ALTER TABLE Users
+ADD COLUMN statut INTEGER DEFAULT 0;
+
 CREATE TABLE type_user(
    id SERIAL,
    type VARCHAR(50)  NOT NULL,
