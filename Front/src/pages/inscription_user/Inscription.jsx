@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ Import ici
 import axios from 'axios';
 
 const Inscription = () => {
+  const navigate = useNavigate(); // ✅ Initialisation ici
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [typeUsers, setTypeUsers] = useState([]);
@@ -32,13 +34,17 @@ const Inscription = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:8080/api/users', newUser);
+      const response = await axios.post('http://localhost:8080/api/users/sendToken', newUser);
       setMessage('Inscription réussie !');
       // Reset du formulaire
       setEmail('');
       setPassword('');
       setSelectedTypeUser('');
       setMatricule('');
+
+      // 🔁 Redirection vers la page de validation via JS natif
+      window.location.href = `/inscription/validation?email=${encodeURIComponent(email)}`;
+
     } catch (error) {
       console.error(error);
       setMessage('Erreur lors de l\'inscription.');
@@ -94,7 +100,7 @@ const Inscription = () => {
           />
         </div>
 
-        <button type="submit">S'inscrire</button>
+        <button type="submit">Confirmer</button>
       </form>
     </div>
   );

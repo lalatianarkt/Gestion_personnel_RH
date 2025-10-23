@@ -6,6 +6,7 @@ import com.rh.manage.Repository.TokenRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -49,6 +50,15 @@ public class TokenService {
     public Token save(Token token) {
         return tokenRepository.save(token);
     }
+    
+    @Transactional
+    public void update(Token token) {
+        tokenRepository.updateToken(
+            token.getTokenGenere(),
+            token.getIsActive() != null ? token.getIsActive().intValue() : 0, // conversion Integer → int
+            String.valueOf(token.getId()) // conversion int → String si besoin
+        );
+    } 
 
     /**
      * 🔍 Récupère le dernier token d’un utilisateur

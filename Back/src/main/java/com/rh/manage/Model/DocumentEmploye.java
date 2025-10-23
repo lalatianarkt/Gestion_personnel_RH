@@ -1,17 +1,14 @@
 package com.rh.manage.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import java.sql.Timestamp;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "document_employe")
 public class DocumentEmploye {
-
     @Id
     @Column(name = "id", length = 50)
     private String id;
@@ -22,92 +19,61 @@ public class DocumentEmploye {
     @Column(name = "chemin_fichier", length = 150, nullable = false)
     private String cheminFichier;
 
-    @Column(name = "date_upload", nullable = false)
-    private Timestamp dateUpload;
+    @CreationTimestamp
+    @Column(name = "date_upload", nullable = false, updatable = false)
+    private LocalDateTime dateUpload;
 
+    @UpdateTimestamp
     @Column(name = "date_modified")
-    private Timestamp dateModified;
+    private LocalDateTime dateModified;
 
-    // Clés étrangères
+    // Relations avec les noms exacts des colonnes de la base
     @ManyToOne
-    @JoinColumn(name = "id_type_document", referencedColumnName = "id")
-    private TypeDocument idTypeDocument;
+    @JoinColumn(name = "id_type_document") // nullable = true selon votre schéma
+    private TypeDocument typeDocument;
 
     @ManyToOne
-    @JoinColumn(name = "id_employe", referencedColumnName = "id")
-    private Employe idEmploye;
+    @JoinColumn(name = "id_employe") // nullable = true selon votre schéma
+    private Employe employe;
 
-    // Constructeur par défaut
+    // Constructeurs
     public DocumentEmploye() {}
 
-    // Constructeur avec paramètres
-    public DocumentEmploye(String id, String nomFichier, String cheminFichier, Timestamp dateUpload,
-                           Timestamp dateModified, TypeDocument idTypeDocument, Employe idEmploye) {
+    public DocumentEmploye(String id, String nomFichier, String cheminFichier) {
         this.id = id;
         this.nomFichier = nomFichier;
         this.cheminFichier = cheminFichier;
-        this.dateUpload = dateUpload;
-        this.dateModified = dateModified;
-        this.idTypeDocument = idTypeDocument;
-        this.idEmploye = idEmploye;
     }
 
-    // Getters et setters
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public DocumentEmploye(String id, String nomFichier, String cheminFichier, TypeDocument typeDocument, Employe employe) {
         this.id = id;
-    }
-
-    public String getNomFichier() {
-        return nomFichier;
-    }
-
-    public void setNomFichier(String nomFichier) {
         this.nomFichier = nomFichier;
-    }
-
-    public String getCheminFichier() {
-        return cheminFichier;
-    }
-
-    public void setCheminFichier(String cheminFichier) {
         this.cheminFichier = cheminFichier;
+        this.typeDocument = typeDocument;
+        this.employe = employe;
     }
 
-    public Timestamp getDateUpload() {
-        return dateUpload;
-    }
+    // Getters et Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setDateUpload(Timestamp dateUpload) {
-        this.dateUpload = dateUpload;
-    }
+    public String getNomFichier() { return nomFichier; }
+    public void setNomFichier(String nomFichier) { this.nomFichier = nomFichier; }
 
-    public Timestamp getDateModified() {
-        return dateModified;
-    }
+    public String getCheminFichier() { return cheminFichier; }
+    public void setCheminFichier(String cheminFichier) { this.cheminFichier = cheminFichier; }
 
-    public void setDateModified(Timestamp dateModified) {
-        this.dateModified = dateModified;
-    }
+    public LocalDateTime getDateUpload() { return dateUpload; }
+    public void setDateUpload(LocalDateTime dateUpload) { this.dateUpload = dateUpload; }
 
-    public TypeDocument getIdTypeDocument() {
-        return idTypeDocument;
-    }
+    public LocalDateTime getDateModified() { return dateModified; }
+    public void setDateModified(LocalDateTime dateModified) { this.dateModified = dateModified; }
 
-    public void setIdTypeDocument(TypeDocument idTypeDocument) {
-        this.idTypeDocument = idTypeDocument;
-    }
+    public TypeDocument getTypeDocument() { return typeDocument; }
+    public void setTypeDocument(TypeDocument typeDocument) { this.typeDocument = typeDocument; }
 
-    public Employe getIdEmploye() {
-        return idEmploye;
-    }
-
-    public void setIdEmploye(Employe idEmploye) {
-        this.idEmploye = idEmploye;
-    }
+    public Employe getEmploye() { return employe; }
+    public void setEmploye(Employe employe) { this.employe = employe; }
 
     @Override
     public String toString() {
@@ -117,8 +83,7 @@ public class DocumentEmploye {
                 ", cheminFichier='" + cheminFichier + '\'' +
                 ", dateUpload=" + dateUpload +
                 ", dateModified=" + dateModified +
-                ", idTypeDocument=" + idTypeDocument +
-                ", idEmploye=" + idEmploye +
                 '}';
     }
 }
+
