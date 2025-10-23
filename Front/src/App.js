@@ -95,9 +95,10 @@ import { SidebarProvider, useSidebar } from "./components/SidebarContext";
 // import Header from './components/Header';
 // import Sidebar from './components/Sidebar';
 import './App.css'; // Pour les styles CSS
-import LoginPage from "./pages/Authentification/RH/Login";
+import LoginPage from "./pages/Authentification/Login";
 import RouterRH from "./pages/router/RH";
 import Inscription from "./pages/inscription_user/Inscription";
+import RouterInscription from "./pages/router/inscription";
 
 // function App() {
 //   return (
@@ -180,7 +181,8 @@ function App() {
         <Route path="" element={<LoginPage/>} />
         {/* <Route path="/dashboard-RH" element={<RouterRH />} /> */}
         <Route path="/dashboard-RH/*" element={<RouterRH />} />
-        <Route path="/inscription" element={<Inscription />} />
+        <Route path="/inscription/*" element={<RouterInscription />} />
+        
         {/* <Route path="/*" element={<RouterRH />} /> */}
       </Routes>
       {/* <SidebarProvider>

@@ -1,13 +1,15 @@
 package com.rh.manage.Model;
 
 import jakarta.persistence.*;
-import java.sql.Date;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "employe")
 public class Employe {
-
     @Id
     @Column(name = "id", length = 50)
     private String id;
@@ -18,11 +20,8 @@ public class Employe {
     @Column(name = "prenom", length = 250, nullable = false)
     private String prenom;
 
-    @Column(name = "sexe", length = 1, nullable = false)
-    private String sexe;
-
     @Column(name = "date_naissance", nullable = false)
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
 
     @Column(name = "telephone", length = 12, nullable = false)
     private String telephone;
@@ -33,9 +32,11 @@ public class Employe {
     @Column(name = "adresse", length = 255, nullable = false)
     private String adresse;
 
-    @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
@@ -45,44 +46,39 @@ public class Employe {
     @Column(name = "nom_pere", length = 255)
     private String nomPere;
 
-    // 🔗 Relation OneToOne : emergency_contact
-    @OneToOne(fetch = FetchType.LAZY)
+    // Relations
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_emergency_contact", referencedColumnName = "id", nullable = false)
     private EmergencyContact emergencyContact;
 
-    // 🔗 Relation OneToOne : infos_professionnelles
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_info_pro", referencedColumnName = "id", nullable = false)
     private InfosProfessionnelles infosProfessionnelles;
 
-    // 🔗 Relation OneToOne : infos_administratives
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_info_admin", referencedColumnName = "id", nullable = false)
     private InfosAdministratives infosAdministratives;
 
-    // 🔨 Constructeurs
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_sexe", referencedColumnName = "id", nullable = false)
+    private Sexe sexe;
+
+    // Constructeurs
     public Employe() {}
 
-    public Employe(String id, String nom, String prenom, String sexe, Date dateNaissance,
-                   String telephone, String email, String adresse, LocalDateTime createdAt,
-                   EmergencyContact emergencyContact,
-                   InfosProfessionnelles infosProfessionnelles,
-                   InfosAdministratives infosAdministratives) {
+    public Employe(String id, String nom, String prenom, LocalDate dateNaissance, 
+                   String telephone, String email, String adresse) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
-        this.sexe = sexe;
+        // this.sexe = sexe;
         this.dateNaissance = dateNaissance;
         this.telephone = telephone;
         this.email = email;
         this.adresse = adresse;
-        this.createdAt = createdAt;
-        this.emergencyContact = emergencyContact;
-        this.infosProfessionnelles = infosProfessionnelles;
-        this.infosAdministratives = infosAdministratives;
     }
 
-    // 🧱 Getters & Setters
+    // Getters et Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -92,11 +88,11 @@ public class Employe {
     public String getPrenom() { return prenom; }
     public void setPrenom(String prenom) { this.prenom = prenom; }
 
-    public String getSexe() { return sexe; }
-    public void setSexe(String sexe) { this.sexe = sexe; }
+    // public String getSexe() { return sexe; }
+    // public void setSexe(String sexe) { this.sexe = sexe; }
 
-    public Date getDateNaissance() { return dateNaissance; }
-    public void setDateNaissance(Date dateNaissance) { this.dateNaissance = dateNaissance; }
+    public LocalDate getDateNaissance() { return dateNaissance; }
+    public void setDateNaissance(LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
 
     public String getTelephone() { return telephone; }
     public void setTelephone(String telephone) { this.telephone = telephone; }
@@ -127,49 +123,4 @@ public class Employe {
 
     public InfosAdministratives getInfosAdministratives() { return infosAdministratives; }
     public void setInfosAdministratives(InfosAdministratives infosAdministratives) { this.infosAdministratives = infosAdministratives; }
-
-    // 🔁 Méthodes utilitaires
-    @Override
-    public String toString() {
-        return "Employe{" +
-                "id='" + id + '\'' +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", sexe='" + sexe + '\'' +
-                ", dateNaissance=" + dateNaissance +
-                ", telephone='" + telephone + '\'' +
-                ", email='" + email + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", createdAt=" + createdAt +
-                ", modifiedAt=" + modifiedAt +
-                ", nomMere='" + nomMere + '\'' +
-                ", nomPere='" + nomPere + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Employe)) return false;
-        Employe employe = (Employe) o;
-        return id != null && id.equals(employe.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    // ⏰ Auto timestamps
-    @PrePersist
-    protected void onCreate() {
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.modifiedAt = LocalDateTime.now();
-    }
 }

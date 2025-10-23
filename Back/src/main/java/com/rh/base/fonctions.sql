@@ -102,3 +102,44 @@ BEFORE INSERT ON Users
 FOR EACH ROW
 WHEN (NEW.id IS NULL)
 EXECUTE PROCEDURE generate_user_id();
+
+-- Corriger la fonction pour type_document
+CREATE OR REPLACE FUNCTION generate_type_document_id()
+RETURNS TRIGGER AS $$
+DECLARE
+    seq_value INT;
+BEGIN
+    seq_value := nextval('seq_type_document_id');  -- ← Ajouter '_id'
+    NEW.id := 'TYP' || LPAD(seq_value::TEXT, 3, '0');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Corriger la fonction pour document_employe
+CREATE OR REPLACE FUNCTION generate_document_employe_id()
+RETURNS TRIGGER AS $$
+DECLARE
+    seq_value INT;
+BEGIN
+    seq_value := nextval('seq_document_employe_id');  -- ← Ajouter '_id'
+    NEW.id := 'DOC' || LPAD(seq_value::TEXT, 3, '0');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger pour type_document
+DROP TRIGGER IF EXISTS before_insert_type_document ON type_document;
+CREATE TRIGGER before_insert_type_document
+BEFORE INSERT ON type_document
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_type_document_id(); 
+
+-- Trigger pour document_employe
+DROP TRIGGER IF EXISTS before_insert_document_employe ON document_employe;
+CREATE TRIGGER before_insert_document_employe
+BEFORE INSERT ON document_employe
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_document_employe_id();
+

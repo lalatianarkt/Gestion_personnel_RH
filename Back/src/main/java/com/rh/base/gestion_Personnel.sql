@@ -7,16 +7,6 @@ CREATE TABLE Poste(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE infos_Administratives(
-   id VARCHAR(50) ,
-   num_cnaps VARCHAR(50)  NOT NULL,
-   cin VARCHAR(20)  NOT NULL,
-   nombre_enfants INTEGER,
-   situation_familiale VARCHAR(50) ,
-   PRIMARY KEY(id),
-   UNIQUE(cin)
-);
-
 CREATE TABLE infos_Professionnelles(
    id VARCHAR(50) ,
    matricule VARCHAR(50)  NOT NULL,
@@ -142,11 +132,46 @@ CREATE TABLE type_user(
    PRIMARY KEY(id)
 );
 
+CREATE TABLE situation_familiale(
+   id SERIAL,
+   type VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE sexe(
+   id SERIAL,
+   sexe VARCHAR(50)  NOT NULL,
+   code VARCHAR(1) ,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE Departement(
+   id VARCHAR(50) ,
+   nom VARCHAR(50)  NOT NULL,
+   description VARCHAR(100) ,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
+   nb_employe INTEGER NOT NULL,
+   id_1 VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES Type_departement(id)
+);
+
+CREATE TABLE infos_Administratives(
+   id VARCHAR(50) ,
+   num_cnaps VARCHAR(50)  NOT NULL,
+   cin VARCHAR(20)  NOT NULL,
+   nombre_enfants INTEGER,
+   id_1 INTEGER,
+   PRIMARY KEY(id),
+   UNIQUE(cin),
+   FOREIGN KEY(id_1) REFERENCES situation_familiale(id)
+);
+
 CREATE TABLE Employe(
    id VARCHAR(50) ,
    nom VARCHAR(100)  NOT NULL,
    prenom VARCHAR(250)  NOT NULL,
-   sexe VARCHAR(1)  NOT NULL,
    date_naissance DATE NOT NULL,
    telephone VARCHAR(12)  NOT NULL,
    email VARCHAR(100)  NOT NULL,
@@ -155,13 +180,16 @@ CREATE TABLE Employe(
    modified_at TIMESTAMP,
    nom_mere VARCHAR(255) ,
    nom_pere VARCHAR(255) ,
-   id_1 VARCHAR(50)  NOT NULL,
+   lieu_naissance VARCHAR(250)  NOT NULL,
+   id_1 INTEGER NOT NULL,
    id_2 VARCHAR(50)  NOT NULL,
    id_3 VARCHAR(50)  NOT NULL,
+   id_4 VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_1) REFERENCES emergency_contact(id),
-   FOREIGN KEY(id_2) REFERENCES infos_Professionnelles(id),
-   FOREIGN KEY(id_3) REFERENCES infos_Administratives(id)
+   FOREIGN KEY(id_1) REFERENCES sexe(id),
+   FOREIGN KEY(id_2) REFERENCES emergency_contact(id),
+   FOREIGN KEY(id_3) REFERENCES infos_Professionnelles(id),
+   FOREIGN KEY(id_4) REFERENCES infos_Administratives(id)
 );
 
 CREATE TABLE Contrat(
@@ -176,18 +204,6 @@ CREATE TABLE Contrat(
    FOREIGN KEY(id_1) REFERENCES Poste(id),
    FOREIGN KEY(id_2) REFERENCES Type_contrat(id),
    FOREIGN KEY(id_3) REFERENCES Employe(id)
-);
-
-CREATE TABLE Departement(
-   id VARCHAR(50) ,
-   nom VARCHAR(50)  NOT NULL,
-   description VARCHAR(100) ,
-   created_at TIMESTAMP NOT NULL,
-   modified_at TIMESTAMP,
-   nb_employe INTEGER NOT NULL,
-   id_1 VARCHAR(50)  NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_1) REFERENCES Type_departement(id)
 );
 
 CREATE TABLE Document_employe(
@@ -319,6 +335,14 @@ CREATE TABLE Poste_employe(
    PRIMARY KEY(id),
    FOREIGN KEY(id_1) REFERENCES Poste(id),
    FOREIGN KEY(id_2) REFERENCES Employe(id)
+);
+
+CREATE TABLE nationalite(
+   id SERIAL,
+   nationalite VARCHAR(150)  NOT NULL,
+   id_1 VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES Employe(id)
 );
 
 CREATE TABLE departement_emp(

@@ -30,7 +30,6 @@ CREATE TABLE Employe(
    id VARCHAR(50) ,
    nom VARCHAR(100)  NOT NULL,
    prenom VARCHAR(250)  NOT NULL,
-   sexe VARCHAR(1)  NOT NULL,
    date_naissance DATE NOT NULL,
    telephone VARCHAR(12)  NOT NULL,
    email VARCHAR(100)  NOT NULL,
@@ -42,10 +41,19 @@ CREATE TABLE Employe(
    id_emergency_contact VARCHAR(50)  NOT NULL,
    id_info_pro VARCHAR(50)  NOT NULL,
    id_info_admin VARCHAR(50)  NOT NULL,
+   id_sexe VARCHAR(50)  NOT NULL,
+   FOREIGN KEY(id_sexe) REFERENCES sexe(id),
    PRIMARY KEY(id),
    FOREIGN KEY(id_emergency_contact) REFERENCES emergency_contact(id),
    FOREIGN KEY( id_info_pro) REFERENCES infos_Professionnelles(id),
    FOREIGN KEY(id_info_admin) REFERENCES infos_Administratives(id)
+);
+
+CREATE TABLE sexe(
+   id SERIAL,
+   sexe VARCHAR(50)  NOT NULL,
+   code VARCHAR(1) ,
+   PRIMARY KEY(id)
 );
 
 CREATE TABLE type_user(
@@ -92,4 +100,23 @@ CREATE TABLE Token(
    PRIMARY KEY(id),
    FOREIGN KEY(id_user) REFERENCES Users(id)
 );
+
+CREATE TABLE Type_document(
+   id VARCHAR(50) ,
+   intitule VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE Document_employe(
+   id VARCHAR(50) ,
+   nom_fichier VARCHAR(100)  NOT NULL,
+   chemin_fichier VARCHAR(150)  NOT NULL,
+   date_upload TIMESTAMP NOT NULL,
+   date_modified TIMESTAMP,
+   id_type_document VARCHAR(50) ,
+   id_employe VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_type_document) REFERENCES Type_document(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id)
+);  
 
