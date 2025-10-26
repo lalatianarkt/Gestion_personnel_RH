@@ -162,10 +162,10 @@ CREATE TABLE infos_Administratives(
    num_cnaps VARCHAR(50)  NOT NULL,
    cin VARCHAR(20)  NOT NULL,
    nombre_enfants INTEGER,
-   id_1 INTEGER,
+   id_situation_familiale INTEGER,
    PRIMARY KEY(id),
    UNIQUE(cin),
-   FOREIGN KEY(id_1) REFERENCES situation_familiale(id)
+   FOREIGN KEY(id_situation_familiale) REFERENCES situation_familiale(id)
 );
 
 CREATE TABLE Employe(

@@ -16,3 +16,9 @@ CREATE SEQUENCE seq_type_document_id START WITH 1 INCREMENT BY 1;
 
 -- Création de la séquence pour document_employe
 CREATE SEQUENCE seq_document_employe_id START WITH 1 INCREMENT BY 1;
+
+-- Séquence pour Poste
+CREATE SEQUENCE seq_poste_id START WITH 1 INCREMENT BY 1;
+
+-- Séquence pour Type_contrat
+CREATE SEQUENCE seq_type_contrat_id START WITH 1 INCREMENT BY 1;

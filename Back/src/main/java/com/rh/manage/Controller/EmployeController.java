@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/employes")
@@ -49,4 +52,15 @@ public class EmployeController {
             return ResponseEntity.status(404).body("Employé non trouvé");
         }
     }
+
+    // @PostMapping("/insertion")
+    // public ResponseEntity<?> insertionEmpInfo(@RequestBody String entity) {
+    //     try {
+            
+    //     } catch (Exception e) {
+            
+    //     }
+    //     return entity;
+    // }
+    
 }
