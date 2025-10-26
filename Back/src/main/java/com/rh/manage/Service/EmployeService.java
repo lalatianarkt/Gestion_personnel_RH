@@ -3,6 +3,7 @@ package com.rh.manage.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.rh.manage.Model.Employe;
+import com.rh.manage.Model.InfosAdministratives;
 import com.rh.manage.Repository.EmployeRepository;
 
 import java.util.List;
@@ -43,4 +44,8 @@ public class EmployeService {
     public void delete(String id) {
         employeRepository.deleteById(id);
     }
+
+    // public void insertion_integrale_employe(Employe employe, InfosAdministratives infosAdministratives, ){
+    //     create(null)
+    // }
 }

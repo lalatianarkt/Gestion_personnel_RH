@@ -143,3 +143,42 @@ FOR EACH ROW
 WHEN (NEW.id IS NULL)
 EXECUTE PROCEDURE generate_document_employe_id();
 
+-- Fonction pour générer l'ID de Poste
+CREATE OR REPLACE FUNCTION generate_poste_id()
+RETURNS TRIGGER AS $$
+DECLARE
+    seq_value INT;
+BEGIN
+    seq_value := nextval('seq_poste_id');
+    NEW.id := 'POST' || LPAD(seq_value::TEXT, 3, '0');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Fonction pour générer l'ID de Type_contrat
+CREATE OR REPLACE FUNCTION generate_type_contrat_id()
+RETURNS TRIGGER AS $$
+DECLARE
+    seq_value INT;
+BEGIN
+    seq_value := nextval('seq_type_contrat_id');
+    NEW.id := 'CONT' || LPAD(seq_value::TEXT, 3, '0');
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger pour Poste
+DROP TRIGGER IF EXISTS before_insert_poste ON poste;
+CREATE TRIGGER before_insert_poste
+BEFORE INSERT ON poste
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_poste_id();
+
+-- Trigger pour Type_contrat
+DROP TRIGGER IF EXISTS before_insert_type_contrat ON type_contrat;
+CREATE TRIGGER before_insert_type_contrat
+BEFORE INSERT ON type_contrat
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_type_contrat_id(); 

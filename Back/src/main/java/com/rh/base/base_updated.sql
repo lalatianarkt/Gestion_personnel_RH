@@ -120,3 +120,49 @@ CREATE TABLE Document_employe(
    FOREIGN KEY(id_employe) REFERENCES Employe(id)
 );  
 
+CREATE TABLE Poste(
+   id VARCHAR(50) ,
+   nom VARCHAR(100)  NOT NULL,
+   description VARCHAR(255) ,
+   created_at TIMESTAMP,
+   modified_at TIMESTAMP,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE Poste_employe(
+   id VARCHAR(50) ,
+   date_debut DATE NOT NULL,
+   date_fin DATE NOT NULL,
+   id_poste VARCHAR(50)  NOT NULL,
+   id_employe VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_poste) REFERENCES Poste(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id)
+);
+
+CREATE TABLE Type_contrat(
+   id VARCHAR(50) ,
+   intitule VARCHAR(50)  NOT NULL,
+   description VARCHAR(255) ,
+   PRIMARY KEY(id)
+);
+
+CREATE TABLE Contrat(
+   id VARCHAR(50) ,
+   date_debut DATE NOT NULL,
+   date_fin DATE,
+   duree INTEGER,
+   id_poste VARCHAR(50)  NOT NULL,
+   id_type_contrat VARCHAR(50)  NOT NULL,
+   id_employe VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_poste) REFERENCES Poste(id),
+   FOREIGN KEY(id_type_contrat) REFERENCES Type_contrat(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id)
+);
+
+CREATE TABLE situation_familiale(
+   id SERIAL,
+   type VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id)
+);
