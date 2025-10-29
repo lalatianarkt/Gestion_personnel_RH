@@ -125,6 +125,12 @@ export default function Sidebar() {
                 </a>
                 <ul className="nav nav-treeview" style={{ display: openSections.organisation ? 'block' : 'none' }}>
                   <li className="nav-item">
+                    <Link to="/dashboard-RH/organisation/addManager" className="nav-link">
+                      <i className="nav-icon bi bi-circle"></i>
+                      <p>Ajout manager</p>
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link to="/dashboard-RH/organisation/assignEmp" className="nav-link">
                       <i className="nav-icon bi bi-circle"></i>
                       <p>Affecter Employé</p>

@@ -32,6 +32,22 @@ function EmployeeInfo() {
     fetchEmployee();
   }, [id, location]);
 
+  // ✅ Fonction utilitaire pour afficher les valeurs d'objets imbriqués
+  const safeDisplay = (obj, property, subProperty = null) => {
+    if (!obj || obj[property] === undefined || obj[property] === null) return 'N/A';
+    
+    if (subProperty && obj[property] && obj[property][subProperty] !== undefined) {
+      return obj[property][subProperty];
+    }
+    
+    // Si c'est un objet simple, essayer d'afficher une propriété significative
+    if (typeof obj[property] === 'object') {
+      return obj[property].type || obj[property].sexe || obj[property].nationalite || obj[property].nom || 'N/A';
+    }
+    
+    return obj[property];
+  };
+
   if (loading) {
     return (
       <div className="container-fluid text-center mt-5">
@@ -62,11 +78,13 @@ function EmployeeInfo() {
                   <h5 className="card-title mb-0">État Civil</h5>
                 </div>
                 <div className="card-body">
-                  <p><strong>Date de naissance:</strong> {employee.dateNaissance}</p>
-                  <p><strong>Lieu de naissance:</strong> {employee.lieuNaissance}</p>
-                  <p><strong>Nationalité:</strong> {employee.nationalite}</p>
-                  <p><strong>Situation familiale:</strong> {employee.infosAdministratives?.situationFamiliale}</p>
-                  <p><strong>Nombre d'enfants:</strong> {employee.infosAdministratives?.nombreEnfants}</p>
+                  <p><strong>Date de naissance:</strong> {employee.dateNaissance || 'N/A'}</p>
+                  <p><strong>Nationalité:</strong> {safeDisplay(employee, 'nationalite', 'nationalite')}</p>
+                  <p><strong>Sexe:</strong> {safeDisplay(employee, 'sexe', 'sexe')}</p>
+                  <p><strong>Situation familiale:</strong> {safeDisplay(employee.infosAdministratives?.situationFamiliale, 'type')}</p>
+                  <p><strong>Nombre d'enfants:</strong> {employee.infosAdministratives?.nombreEnfants ?? 'N/A'}</p>
+                  <p><strong>Nom de la mère:</strong> {employee.nomMere || 'N/A'}</p>
+                  <p><strong>Nom du père:</strong> {employee.nomPere || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -77,9 +95,21 @@ function EmployeeInfo() {
                   <h5 className="card-title mb-0">Coordonnées</h5>
                 </div>
                 <div className="card-body">
-                  <p><strong>Adresse:</strong> {employee.adresse}</p>
-                  <p><strong>Téléphone:</strong> {employee.telephone}</p>
-                  <p><strong>Email professionnel:</strong> {employee.email}</p>
+                  <p><strong>Adresse:</strong> {employee.adresse || 'N/A'}</p>
+                  <p><strong>Téléphone:</strong> {employee.telephone || 'N/A'}</p>
+                  <p><strong>Email:</strong> {employee.email || 'N/A'}</p>
+                </div>
+              </div>
+              
+              {/* Contact d'urgence */}
+              <div className="card mt-3">
+                <div className="card-header bg-secondary text-white">
+                  <h5 className="card-title mb-0">Contact d'urgence</h5>
+                </div>
+                <div className="card-body">
+                  <p><strong>Téléphone:</strong> {employee.emergencyContact?.contact || 'N/A'}</p>
+                  <p><strong>Email:</strong> {employee.emergencyContact?.email || 'N/A'}</p>
+                  <p><strong>Adresse:</strong> {employee.emergencyContact?.adresse || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -95,10 +125,12 @@ function EmployeeInfo() {
                   <h5 className="card-title mb-0">Informations Administratives</h5>
                 </div>
                 <div className="card-body">
-                  <p><strong>CIN:</strong> {employee.infosAdministratives?.cin}</p>
-                  <p><strong>Numéro CNAPS:</strong> {employee.infosAdministratives?.numCnaps}</p>
-                  <p><strong>Situation familiale:</strong> {employee.infosAdministratives?.situationFamiliale}</p>
-                  <p><strong>Nombre d'enfants:</strong> {employee.infosAdministratives?.nombreEnfants}</p>
+                  <p><strong>CIN:</strong> {employee.infosAdministratives?.cin || 'N/A'}</p>
+                  <p><strong>Numéro CNAPS:</strong> {employee.infosAdministratives?.numCnaps || 'N/A'}</p>
+                  <p><strong>Situation familiale:</strong> {safeDisplay(employee.infosAdministratives?.situationFamiliale, 'type')}</p>
+                  <p><strong>Nombre d'enfants:</strong> {employee.infosAdministratives?.nombreEnfants ?? 'N/A'}</p>
+                  <p><strong>Date délivrance CIN:</strong> {employee.infosAdministratives?.dateDelivranceCin || 'N/A'}</p>
+                  <p><strong>Lieu délivrance CIN:</strong> {employee.infosAdministratives?.lieuDelivranceCin || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -111,13 +143,15 @@ function EmployeeInfo() {
             <div className="col-md-6">
               <div className="card">
                 <div className="card-header bg-success text-white">
-                  <h5 className="card-title mb-0">Poste et Département</h5>
+                  <h5 className="card-title mb-0">Informations Professionnelles</h5>
                 </div>
                 <div className="card-body">
-                  <p><strong>Poste:</strong> {employee.poste}</p>
-                  <p><strong>Département:</strong> {employee.departement}</p>
-                  <p><strong>Date d'embauche:</strong> {employee.infosProfessionnelles?.dateEmbauche}</p>
-                  <p><strong>Matricule:</strong> {employee.infosProfessionnelles?.matricule}</p>
+                  <p><strong>Matricule:</strong> {employee.infosProfessionnelles?.matricule || 'N/A'}</p>
+                  <p><strong>Date d'embauche:</strong> {employee.infosProfessionnelles?.dateEmbauche || 'N/A'}</p>
+                  <p><strong>Poste:</strong> {employee.infosProfessionnelles?.poste || 'N/A'}</p>
+                  <p><strong>Département:</strong> {employee.infosProfessionnelles?.departement || 'N/A'}</p>
+                  <p><strong>Salaire de base:</strong> {employee.infosProfessionnelles?.salaireDeBase || 'N/A'}</p>
+                  <p><strong>Statut:</strong> {employee.infosProfessionnelles?.statut || 'N/A'}</p>
                 </div>
               </div>
             </div>
@@ -125,7 +159,7 @@ function EmployeeInfo() {
         );
 
       default:
-        return <div>Type d'information non reconnu</div>;
+        return <div className="alert alert-warning">Type d'information non reconnu</div>;
     }
   };
 
@@ -145,7 +179,7 @@ function EmployeeInfo() {
                 </button>
                 <h1 className="d-inline-block mb-0">
                   {employee.prenom} {employee.nom}
-                  <small className="text-muted ms-2">({employee.infosProfessionnelles?.matricule})</small>
+                  <small className="text-muted ms-2">({employee.infosProfessionnelles?.matricule || 'N/A'})</small>
                 </h1>
               </div>
               <div className="btn-group">

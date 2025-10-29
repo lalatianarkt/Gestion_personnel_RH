@@ -182,3 +182,44 @@ BEFORE INSERT ON type_contrat
 FOR EACH ROW
 WHEN (NEW.id IS NULL)
 EXECUTE PROCEDURE generate_type_contrat_id(); 
+
+-- Fonction pour générer un ID Type Département
+CREATE OR REPLACE FUNCTION generate_type_departement_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id := 'TDEP' || nextval('seq_type_departement_id');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Fonction pour générer un ID Département
+CREATE OR REPLACE FUNCTION generate_departement_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id := 'DEP' || nextval('seq_departement_id');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger pour Type Département
+DROP TRIGGER IF EXISTS before_insert_type_departement ON type_departement;
+CREATE TRIGGER before_insert_type_departement
+BEFORE INSERT ON type_departement
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_type_departement_id();
+
+
+-- Trigger pour Département
+DROP TRIGGER IF EXISTS before_insert_departement ON departement;
+CREATE TRIGGER before_insert_departement
+BEFORE INSERT ON departement
+FOR EACH ROW
+WHEN (NEW.id IS NULL)
+EXECUTE PROCEDURE generate_departement_id();
+

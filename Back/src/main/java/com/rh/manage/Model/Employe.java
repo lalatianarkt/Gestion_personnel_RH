@@ -1,15 +1,17 @@
 package com.rh.manage.Model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Entity
 @Table(name = "employe")
 public class Employe {
+
     @Id
     @Column(name = "id", length = 50)
     private String id;
@@ -32,7 +34,6 @@ public class Employe {
     @Column(name = "adresse", length = 255, nullable = false)
     private String adresse;
 
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -46,39 +47,75 @@ public class Employe {
     @Column(name = "nom_pere", length = 255)
     private String nomPere;
 
-    // Relations
-    @OneToOne(cascade = CascadeType.ALL)
+    // === Relations ===
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_emergency_contact", referencedColumnName = "id", nullable = false)
     private EmergencyContact emergencyContact;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_info_pro", referencedColumnName = "id", nullable = false)
     private InfosProfessionnelles infosProfessionnelles;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_info_admin", referencedColumnName = "id", nullable = false)
     private InfosAdministratives infosAdministratives;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_sexe", referencedColumnName = "id", nullable = false)
     private Sexe sexe;
 
-    // Constructeurs
-    public Employe() {}
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_nationalite", referencedColumnName = "id", nullable = false)
+    private Nationalite nationalite;
 
-    public Employe(String id, String nom, String prenom, LocalDate dateNaissance, 
-                   String telephone, String email, String adresse) {
-        this.id = id;
+    // === Constructeurs ===
+    public Employe() {
+        // Ne rien générer ici pour éviter les conflits avec JPA
+    }
+
+    public Employe(String nom, String prenom, LocalDate dateNaissance, String telephone,
+                    String email, String adresse, String nomMere, String nomPere, 
+                    Nationalite nationalite, 
+                    Sexe sexe, 
+                    InfosAdministratives infosAdministratives, 
+                    InfosProfessionnelles infosProfessionnelles,
+                    EmergencyContact emergencyContact) {
         this.nom = nom;
         this.prenom = prenom;
-        // this.sexe = sexe;
         this.dateNaissance = dateNaissance;
         this.telephone = telephone;
         this.email = email;
         this.adresse = adresse;
+        this.nomMere = nomMere;
+        this.nomPere = nomPere;
+        this.nationalite = nationalite;
+        this.sexe = sexe;
+        this.infosAdministratives = infosAdministratives;
+        this.infosProfessionnelles = infosProfessionnelles;
+        this.emergencyContact = emergencyContact;
     }
 
-    // Getters et Setters
+    // === Méthode PrePersist pour initialiser ID et createdAt seulement à l’insertion ===
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = generateCustomId(LocalDate.now());
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
+
+    // ✅ Génération d’un ID du type EMP-20251029-ABC123
+    private String generateCustomId(LocalDate date) {
+        String datePart = date != null
+                ? date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                : LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String randomPart = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "EMP-" + datePart + "-" + randomPart;
+    }
+
+    // === Getters / Setters ===
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -87,9 +124,6 @@ public class Employe {
 
     public String getPrenom() { return prenom; }
     public void setPrenom(String prenom) { this.prenom = prenom; }
-
-    // public String getSexe() { return sexe; }
-    // public void setSexe(String sexe) { this.sexe = sexe; }
 
     public LocalDate getDateNaissance() { return dateNaissance; }
     public void setDateNaissance(LocalDate dateNaissance) { this.dateNaissance = dateNaissance; }
@@ -123,4 +157,22 @@ public class Employe {
 
     public InfosAdministratives getInfosAdministratives() { return infosAdministratives; }
     public void setInfosAdministratives(InfosAdministratives infosAdministratives) { this.infosAdministratives = infosAdministratives; }
+
+    public Sexe getSexe() { return sexe; }
+    public void setSexe(Sexe sexe) { this.sexe = sexe; }
+
+    public Nationalite getNationalite() { return nationalite; }
+    public void setNationalite(Nationalite nationalite) { this.nationalite = nationalite; }
+
+    @Override
+    public String toString() {
+        return "Employe{" +
+                "id='" + id + '\'' +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", dateNaissance=" + dateNaissance +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

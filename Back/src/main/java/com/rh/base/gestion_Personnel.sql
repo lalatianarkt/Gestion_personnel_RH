@@ -62,6 +62,7 @@ CREATE TABLE emergency_contact(
    contact VARCHAR(50) ,
    email VARCHAR(50) ,
    adresse VARCHAR(50) ,
+   nom VARCHAR(250) ,
    PRIMARY KEY(id)
 );
 
@@ -138,6 +139,12 @@ CREATE TABLE situation_familiale(
    PRIMARY KEY(id)
 );
 
+CREATE TABLE nationalite(
+   id SERIAL,
+   nationalite VARCHAR(150)  NOT NULL,
+   PRIMARY KEY(id)
+);
+
 CREATE TABLE sexe(
    id SERIAL,
    sexe VARCHAR(50)  NOT NULL,
@@ -162,10 +169,10 @@ CREATE TABLE infos_Administratives(
    num_cnaps VARCHAR(50)  NOT NULL,
    cin VARCHAR(20)  NOT NULL,
    nombre_enfants INTEGER,
-   id_situation_familiale INTEGER,
+   id_1 INTEGER,
    PRIMARY KEY(id),
    UNIQUE(cin),
-   FOREIGN KEY(id_situation_familiale) REFERENCES situation_familiale(id)
+   FOREIGN KEY(id_1) REFERENCES situation_familiale(id)
 );
 
 CREATE TABLE Employe(
@@ -182,14 +189,16 @@ CREATE TABLE Employe(
    nom_pere VARCHAR(255) ,
    lieu_naissance VARCHAR(250)  NOT NULL,
    id_1 INTEGER NOT NULL,
-   id_2 VARCHAR(50)  NOT NULL,
+   id_2 INTEGER NOT NULL,
    id_3 VARCHAR(50)  NOT NULL,
    id_4 VARCHAR(50)  NOT NULL,
+   id_5 VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_1) REFERENCES sexe(id),
-   FOREIGN KEY(id_2) REFERENCES emergency_contact(id),
-   FOREIGN KEY(id_3) REFERENCES infos_Professionnelles(id),
-   FOREIGN KEY(id_4) REFERENCES infos_Administratives(id)
+   FOREIGN KEY(id_2) REFERENCES nationalite(id),
+   FOREIGN KEY(id_3) REFERENCES emergency_contact(id),
+   FOREIGN KEY(id_4) REFERENCES infos_Professionnelles(id),
+   FOREIGN KEY(id_5) REFERENCES infos_Administratives(id)
 );
 
 CREATE TABLE Contrat(
@@ -197,6 +206,7 @@ CREATE TABLE Contrat(
    date_debut DATE NOT NULL,
    date_fin DATE,
    duree INTEGER,
+   statut VARCHAR(50) ,
    id_1 VARCHAR(50)  NOT NULL,
    id_2 VARCHAR(50)  NOT NULL,
    id_3 VARCHAR(50)  NOT NULL,
@@ -337,18 +347,24 @@ CREATE TABLE Poste_employe(
    FOREIGN KEY(id_2) REFERENCES Employe(id)
 );
 
-CREATE TABLE nationalite(
-   id SERIAL,
-   nationalite VARCHAR(150)  NOT NULL,
+CREATE TABLE departement_employe(
+   id VARCHAR(50) ,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
    id_1 VARCHAR(50)  NOT NULL,
+   id_2 VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_1) REFERENCES Employe(id)
+   FOREIGN KEY(id_1) REFERENCES Employe(id),
+   FOREIGN KEY(id_2) REFERENCES Departement(id)
 );
 
-CREATE TABLE departement_emp(
-   id VARCHAR(50) ,
-   id_1 VARCHAR(50) ,
-   PRIMARY KEY(id, id_1),
-   FOREIGN KEY(id) REFERENCES Employe(id),
-   FOREIGN KEY(id_1) REFERENCES Departement(id)
+CREATE TABLE manager_employe(
+   id SERIAL,
+   date_fin DATE,
+   date_debut DATE,
+   id_1 VARCHAR(50)  NOT NULL,
+   id_2 VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_1) REFERENCES Manager(id),
+   FOREIGN KEY(id_2) REFERENCES Employe(id)
 );

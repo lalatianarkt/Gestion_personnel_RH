@@ -22,3 +22,15 @@ CREATE SEQUENCE seq_poste_id START WITH 1 INCREMENT BY 1;
 
 -- Séquence pour Type_contrat
 CREATE SEQUENCE seq_type_contrat_id START WITH 1 INCREMENT BY 1;
+
+CREATE SEQUENCE seq_departement_id
+    START WITH 1
+    INCREMENT BY 1;
+
+CREATE SEQUENCE seq_type_departement_id
+    START WITH 1
+    INCREMENT BY 1;
+
+CREATE SEQUENCE seq_manager_id
+    START WITH 1
+    INCREMENT BY 1;

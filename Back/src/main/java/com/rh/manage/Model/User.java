@@ -32,7 +32,7 @@ public class User {
     private TypeUser typeUser;
     
     // 🔗 Relation One-to-One avec Employe
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_employe", referencedColumnName = "id", nullable = false, unique = true)
     private Employe employe;
     
