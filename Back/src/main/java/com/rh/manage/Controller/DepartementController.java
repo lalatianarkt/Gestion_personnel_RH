@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/departements")
@@ -16,7 +19,7 @@ public class DepartementController {
 
     @Autowired
     private DepartementService departementService;
-
+    
     // ✅ 1. Ajouter un département
     @PostMapping
     public ResponseEntity<Departement> createDepartement(@RequestBody Departement departement) {

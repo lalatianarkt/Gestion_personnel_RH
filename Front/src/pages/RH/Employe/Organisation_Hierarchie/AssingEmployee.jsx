@@ -49,13 +49,16 @@ const AssignEmployee = () => {
     setSaving(true);
     try {
         console.log("date début : ", dateDebut);
+        const payload = {
+        employe: {id : selectedEmployee},
+        manager: {id: selectedManager},
+        dateDebut: dateDebut,
+        dateFin: dateFin || null
+      }; 
         
-        await axios.post("http://localhost:8080/api/manager-employe", {
-            manager: managers.find((m) => m.id === selectedManager),
-            employe: employees.find((e) => e.id === selectedEmployee),
-            dateDebut: dateDebut,
-            dateFin: dateFin || null, // facultatif
-        });
+        await axios.post("http://localhost:8080/api/manager-employe", 
+            payload
+        );
 
       alert("✅ Employé affecté au manager avec succès !");
       // Réinitialiser les sélections

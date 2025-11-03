@@ -1,6 +1,7 @@
 package com.rh.manage.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.rh.manage.Model.Nationalite;
 import com.rh.manage.Model.Poste;
 import com.rh.manage.Model.PosteEmploye;
 import com.rh.manage.Model.Sexe;
+import com.rh.manage.Repository.DepartementEmployeRepository;
 import com.rh.manage.Repository.EmployeRepository;
 
 import java.sql.Connection;
@@ -26,34 +28,45 @@ import java.util.Optional;
 public class EmployeService {
 
     @Autowired
-    private InfosProfessionnellesService infosProfessionnellesService;
+    InfosProfessionnellesService infosProfessionnellesService;
 
     @Autowired
-    private EmployeRepository employeRepository;
+    EmployeRepository employeRepository;
 
     @Autowired 
-    private DepartementService departementService;
+    DepartementService departementService;
+
+    // @Autowired 
+    // // @Lazy
+    // DepartementEmployeService departementEmployeService;
 
     @Autowired 
-    private DepartementEmployeService departementEmployeService;
+    DepartementEmployeRepository departementEmployeRepository;
 
     @Autowired 
-    private PosteService posteService;
+    PosteService posteService;
 
     @Autowired 
-    private PosteEmployeService posteEmployeService;
+    PosteEmployeService posteEmployeService;
 
     @Autowired
-    private InfosAdministrativesService infosAdministrativesService;
+    InfosAdministrativesService infosAdministrativesService;
 
     @Autowired 
-    private EmergencyContactService emergencyContactService;
+    EmergencyContactService emergencyContactService;
 
     @Autowired
-    private NationaliteService nationaliteService;
+    NationaliteService nationaliteService;
 
     @Autowired
-    private SexeService sexeService;
+    SexeService sexeService;
+
+    // public 
+    // getAllDepartement => List<Departement> les_departements 
+    // foreach(Departement dep : les_departements){
+    //     Manager manager_de_ce_departement = managerService.getManagerParDepartement();
+    //     List<ManagerEmploye> les_manager_employés = managerService.getEmployeParManager(manager_de_ce_departement).;
+    // }
 
     // ✅ Récupérer tous les employés
     public List<Employe> getAll() {
@@ -86,7 +99,7 @@ public class EmployeService {
     }
 
     @Transactional
-    public void insertionIntegraleEmploye(EmployeDTO employeDTO) {
+    public void insertionIntegraleEmploye(EmployeDTO employeDTO) throws Exception {
         try {
 
             // System.out.println("right here +++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -134,7 +147,8 @@ public class EmployeService {
             // departementEmploye.setCreatedAt(LocalDateTime.now());
             departementEmploye.setDepartement(departement);
             departementEmploye.setEmploye(employe);
-            departementEmployeService.save(departementEmploye);
+            departementEmployeRepository.save(departementEmploye);
+            // departementEmployeService.createData(departementEmploye);
 
             // Création de la relation employé-poste
             Optional<Poste> posteOpt = posteService.getPosteById(employeDTO.getPoste().getId());

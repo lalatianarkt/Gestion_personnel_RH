@@ -31,11 +31,13 @@ public class ManagerEmploye {
     @Column(name = "date_fin")
     private Date dateFin;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // @ManyToOne(fetch = FetchType.LAZY) 
+    @ManyToOne
     @JoinColumn(name = "id_manager", nullable = false)
     private Manager manager;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_employe", nullable = false)
     private Employe employe;
 

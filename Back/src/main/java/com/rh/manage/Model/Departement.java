@@ -33,7 +33,7 @@ public class Departement {
 
     // Clé étrangère vers TypeDepartement
     @ManyToOne
-    @JoinColumn(name = "id_departement", referencedColumnName = "id")
+    @JoinColumn(name = "id_type_departement", referencedColumnName = "id")
     private TypeDepartement idTypeDepartement;
 
     // Constructeur par défaut

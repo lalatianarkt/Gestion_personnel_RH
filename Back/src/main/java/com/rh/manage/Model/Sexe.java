@@ -9,7 +9,7 @@ public class Sexe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "sexe", length = 10, nullable = false)
+    @Column(name = "sexe", length = 50, nullable = false)
     private String sexe;
 
     @Column(name = "code", length = 1, nullable = false, unique = true)

@@ -24,11 +24,13 @@ public class DepartementEmploye {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "id_employe", referencedColumnName = "id", nullable = false)
     private Employe employe;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @ManyToOne(fetch = FetchType.LAZY, optional = false) 
+    @ManyToOne 
     @JoinColumn(name = "id_departement", referencedColumnName = "id", nullable = false)
     private Departement departement;
 
