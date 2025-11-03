@@ -27,12 +27,12 @@ public class EmergencyContactService {
 
     // ✅ Ajouter un nouveau contact
     public EmergencyContact create(EmergencyContact contact) {
-        if (emergencyContactRepository.existsByContact(contact.getContact())) {
-            throw new IllegalArgumentException("Le contact existe déjà !");
-        }
-        if (contact.getEmail() != null && emergencyContactRepository.existsByEmail(contact.getEmail())) {
-            throw new IllegalArgumentException("L'email est déjà utilisé !");
-        }
+        // if (emergencyContactRepository.existsByContact(contact.getContact())) {
+        //     throw new IllegalArgumentException("Le contact existe déjà !");
+        // }
+        // if (contact.getEmail() != null && emergencyContactRepository.existsByEmail(contact.getEmail())) {
+        //     throw new IllegalArgumentException("L'email est déjà utilisé !");
+        // }
         return emergencyContactRepository.save(contact);
     }
 

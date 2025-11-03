@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rh.manage.Model.Manager;
+import com.rh.manage.Model.ManagerEmploye;
 import com.rh.manage.Repository.ManagerRepository;
 
 import java.util.List;
@@ -20,6 +21,10 @@ public class ManagerService {
 
     @Autowired
     ManagerRepository managerRepository;
+
+    public Manager getManagerParDepartement(String departementId) {
+        return managerRepository.findByDepartementId(departementId).get();
+    }
 
     // Récupérer tous les managers
     public List<Manager> getAllManagers() {

@@ -21,9 +21,6 @@ const DepartmentsManagers = () => {
     }
   };
 
-//   departements = 
-//   "/api/departements"
-
   return (
     <div className="container">
       <h2>Gestion des Départements et Managers</h2>
