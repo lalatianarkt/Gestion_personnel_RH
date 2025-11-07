@@ -14,6 +14,7 @@ function AddEmployee() {
   const [nationalites, setNationalites] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
+  const [managers, setManagers] = useState(true);
 
   const [employee, setEmployee] = useState({
     // Informations personnelles
@@ -65,6 +66,7 @@ function AddEmployee() {
           situationsResponse,
           departementsResponse,
           nationalitesResponse,
+          managersResponse,
         ] = await Promise.all([
           axios.get("http://localhost:8080/api/sexes"),
           axios.get("http://localhost:8080/api/postes"),
@@ -72,6 +74,7 @@ function AddEmployee() {
           axios.get("http://localhost:8080/api/situation-familiale"),
           axios.get("http://localhost:8080/api/departements"),
           axios.get("http://localhost:8080/api/nationalites"),
+          axios.get("http://localhost:8080/api/managers")
         ]);
 
         setSexes(sexesResponse.data);
@@ -80,6 +83,7 @@ function AddEmployee() {
         setSituationsFamiliales(situationsResponse.data);
         setDepartements(departementsResponse.data);
         setNationalites(nationalitesResponse.data);
+        setManagers(managersResponse.data);
       } catch (error) {
         console.error("Erreur lors du chargement des données:", error);
       } finally {
@@ -113,7 +117,7 @@ function AddEmployee() {
           adresse: employee.adresse,
           nomMere: employee.nomMere,
           nomPere: employee.nomPere,
-          // lieuNaissance: employee.lieuNaissance,
+          lieuNaissance: employee.lieuNaissance,
         },
         sexe: { id: parseInt(employee.sexeId) },
         nationalite: {
@@ -124,7 +128,7 @@ function AddEmployee() {
           email: employee.emailUrgence,
           adresse: employee.adresseUrgence,
           contact: employee.telephoneUrgence || "",
-        },
+        }, 
         infosAdministratives: {
           numCnaps: employee.numCnaps,
           cin: employee.cin,
@@ -132,28 +136,53 @@ function AddEmployee() {
           situationFamiliale: { id: parseInt(employee.situationFamilialeId) },
         }, 
         infosProfessionnelles: {
-          // matricule: employee.matricule,
           dateEmbauche: employee.dateEmbauche,
-          // salaireBase: employee.salaireBase,
-          typeContrat: { id: parseInt(employee.typeContratId) },
-        },
-        poste: { id: employee.posteId },
-        departement: { id: employee.departementId },
-        posteEmploye: {
-          dateDebut: employee.dateDebut,
-          dateFin: employee.dateFin,
+          poste: { id: employee.posteId },
+          departement: { id: employee.departementId },
+          typeContrat: { id: employee.typeContratId},
+          manager: {id: employee.managerId},
+          employe: {}
         },
       };  
 
-      console.log("✅ Payload envoyé :", payload);
+      console.log("✅ Payload adresse :", payload.emergencyContact.adresse);
+      console.log("✅ Payload nom :", payload.emergencyContact.nom);
+      console.log("✅ Payload contact :", payload.emergencyContact.contact);
+      console.log("✅ Payload email :", payload.emergencyContact.email);
+      console.log("all : ", payload);
+
 
       await axios.post("http://localhost:8080/api/employes", payload);
 
       alert("Employé ajouté avec succès !");
-      navigate("/dashboard-RH/employees");
+      // navigate("/dashboard-RH/employees");
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'employé:", error);
-      alert("Erreur lors de l'ajout de l'employé");
+  
+      if (error.response) {
+        // Erreur avec réponse du serveur
+        const errorMessage = error.response.data;
+        
+        if (typeof errorMessage === 'string' && errorMessage.includes('Erreurs de validation')) {
+          // C'est une erreur de validation, afficher le message détaillé
+          alert(`Erreur de validation:\n${errorMessage}`);
+        } else if (error.response.status === 400) {
+          // Erreur Bad Request (validation)
+          alert(`Données invalides: ${errorMessage}`);
+        } else if (error.response.status === 500) {
+          // Erreur serveur
+          alert("Erreur interne du serveur. Veuillez réessayer.");
+        } else {
+          // Autre erreur
+          alert(`Erreur: ${errorMessage}`);
+        }
+      } else if (error.request) {
+        // Erreur de réseau
+        alert("Erreur de connexion. Vérifiez votre connexion internet.");
+      } else {
+        // Erreur inconnue
+        alert("Erreur inattendue: " + error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -208,7 +237,7 @@ function AddEmployee() {
                   </div>
                   <div className="col-md-4 mb-3">
                     <label>Téléphone *</label>
-                    <input type="text" name="telephone" className="form-control" value={employee.telephone} onChange={handleChange} maxLength="12" required />
+                    <input type="text" name="telephone" className="form-control" value={employee.telephone} onChange={handleChange} maxLength="20" required />
                   </div>
                   <div className="col-md-6 mb-3">
                     <label>Email *</label>
@@ -308,6 +337,13 @@ function AddEmployee() {
                     </select>
                   </div>
                   <div className="col-md-6 mb-3">
+                    <label>Manager *</label>
+                    <select name="managerId" className="form-select" value={employee.managerId} onChange={handleChange} required disabled={dataLoading}>
+                      <option value="">-- Assigner à un manager --</option>
+                      {managers.map((m) => <option key={m.id} value={m.id}>{m.employe.nom}</option>)}
+                    </select>
+                  </div>
+                  <div className="col-md-6 mb-3">
                     <label>Type de contrat *</label>
                     <select name="typeContratId" className="form-select" value={employee.typeContratId} onChange={handleChange} required disabled={dataLoading}>
                       <option value="">-- Choisir un type --</option>
@@ -321,14 +357,14 @@ function AddEmployee() {
                       {departements.map((d) => <option key={d.id} value={d.id}>{d.nom}</option>)}
                     </select>
                   </div>
-                  <div className="col-md-6 mb-3">
+                  {/* <div className="col-md-6 mb-3">
                     <label>Date début d'assignement de poste</label>
                     <input type="date" name="dateDebut" className="form-control" value={employee.dateDebut} onChange={handleChange} />
                   </div>
                   <div className="col-md-6 mb-3">
                     <label>Date fin d'assignement de poste</label>
                     <input type="date" name="dateFin" className="form-control" value={employee.dateFin} onChange={handleChange} />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}

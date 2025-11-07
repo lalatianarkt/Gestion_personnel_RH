@@ -22,14 +22,14 @@ public class OrganisationController {
     @Autowired
     OrganisationService organisationService;
 
-    @GetMapping
-    public ResponseEntity<List<OrganisationDTO>> getAllOrganisation() {
-        try {
-            List<OrganisationDTO> organisations = organisationService.getAllOrganisation();
-            return ResponseEntity.ok(organisations);
-        } catch (RuntimeException e) {
-            // Retourne un status 500 avec le message d'erreur
-            return ResponseEntity.status(500).body(null);
-        }
-    }
+    // @GetMapping
+    // public ResponseEntity<List<OrganisationDTO>> getAllOrganisation() {
+    //     try {
+    //         List<OrganisationDTO> organisations = organisationService.getAllOrganisation();
+    //         return ResponseEntity.ok(organisations);
+    //     } catch (RuntimeException e) {
+    //         // Retourne un status 500 avec le message d'erreur
+    //         return ResponseEntity.status(500).body(null);
+    //     }
+    // }
 }

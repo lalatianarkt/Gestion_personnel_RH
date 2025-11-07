@@ -1,7 +1,11 @@
 package com.rh.manage.Model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -13,76 +17,111 @@ public class InfosProfessionnelles {
     @Column(name = "id", length = 50)
     private String id;
 
-    @Column(name = "matricule", length = 50, nullable = false, unique = true)
-    private String matricule;
-
     @Column(name = "date_embauche", nullable = false)
     private LocalDate dateEmbauche;
 
-    // 🔹 Constructeur par défaut
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "modified_at")
+    private LocalDateTime modifiedAt;
+
+    // === RELATIONS ===
+    
+    @ManyToOne
+    @JoinColumn(name = "id_manager")
+    private Manager manager;
+
+    @ManyToOne
+    @JoinColumn(name = "id_departement")
+    private Departement departement;
+
+    @ManyToOne
+    @JoinColumn(name = "id_poste", nullable = false)
+    private Poste poste;
+
+    @ManyToOne
+    @JoinColumn(name = "id_type_contrat", nullable = false)
+    private TypeContrat typeContrat;
+
+    // ✅ CORRECTION : PAS DE CASCADE pour ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "id_employe", nullable = false)
+    private Employe employe;
+
+    // === CONSTRUCTEURS ===
+
     public InfosProfessionnelles() {
-        this.dateEmbauche = LocalDate.now();
-        this.id = generateCustomId(dateEmbauche);
-        this.matricule = generateMatricule(this.id, this.dateEmbauche);
+        // Constructeur par défaut pour JPA
     }
 
-    // 🔹 Constructeur avec paramètres
-    public InfosProfessionnelles(LocalDate dateEmbauche) {
+    public InfosProfessionnelles(LocalDate dateEmbauche, Employe employe, Poste poste, TypeContrat typeContrat, Departement departement, Manager manager) {
         this.dateEmbauche = dateEmbauche;
-        this.id = generateCustomId(dateEmbauche);
-        this.matricule = generateMatricule(this.id, dateEmbauche);
+        this.employe = employe;
+        this.poste = poste;
+        this.typeContrat = typeContrat;
+        this.departement = departement;
+        this.manager = manager;
     }
 
-    // === Génération personnalisée ===
-
-    // ✅ ID du type : PROF-20250315-abc123
-    private String generateCustomId(LocalDate dateEmbauche) {
-        String datePart = (dateEmbauche != null)
-                ? dateEmbauche.format(DateTimeFormatter.BASIC_ISO_DATE)
-                : LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
-        String shortUuid = UUID.randomUUID().toString().substring(0, 6);
-        return "PROF-" + datePart + "-" + shortUuid;
-    }
-
-    // ✅ Matricule du type : MAT-20250315-abc123
-    private String generateMatricule(String id, LocalDate dateEmbauche) {
-        if (dateEmbauche == null) dateEmbauche = LocalDate.now();
-        String datePart = dateEmbauche.format(DateTimeFormatter.BASIC_ISO_DATE);
-        String suffix = (id != null && id.length() >= 6)
-                ? id.substring(id.length() - 6)
-                : UUID.randomUUID().toString().substring(0, 6);
-        return "MAT-" + datePart + "-" + suffix;
-    }
-
-    // === Getters / Setters ===
-
-    public String getId() { return id; }
-
-    public void setId(String id) {
-        this.id = id;
-        if (this.dateEmbauche != null) {
-            this.matricule = generateMatricule(id, this.dateEmbauche);
+    // === MÉTHODE PREPERSIST ===
+    
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null) {
+            this.id = generateCustomId();
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
         }
     }
 
-    public String getMatricule() { return matricule; }
+    // === GÉNÉRATION D'IDENTIFIANT ===
 
-    public void setMatricule(String matricule) { this.matricule = matricule; }
+    private String generateCustomId() {
+        String datePart = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
+        String shortUuid = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "IP-" + datePart + "-" + shortUuid;
+    }
+
+    // === GETTERS / SETTERS ===
+    // (inchangés)
+
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public LocalDate getDateEmbauche() { return dateEmbauche; }
+    public void setDateEmbauche(LocalDate dateEmbauche) { this.dateEmbauche = dateEmbauche; }
 
-    public void setDateEmbauche(LocalDate dateEmbauche) {
-        this.dateEmbauche = dateEmbauche;
-        this.id = generateCustomId(dateEmbauche);
-        this.matricule = generateMatricule(this.id, dateEmbauche);
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getModifiedAt() { return modifiedAt; }
+    public void setModifiedAt(LocalDateTime modifiedAt) { this.modifiedAt = modifiedAt; }
+
+    public Manager getManager() { return manager; }
+    public void setManager(Manager manager) { this.manager = manager; }
+
+    public Departement getDepartement() { return departement; }
+    public void setDepartement(Departement departement) { this.departement = departement; }
+
+    public Poste getPoste() { return poste; }
+    public void setPoste(Poste poste) { this.poste = poste; }
+
+    public TypeContrat getTypeContrat() { return typeContrat; }
+    public void setTypeContrat(TypeContrat typeContrat) { this.typeContrat = typeContrat; }
+
+    public Employe getEmploye() { return employe; }
+    public void setEmploye(Employe employe) { this.employe = employe; }
 
     @Override
     public String toString() {
         return "InfosProfessionnelles{" +
                 "id='" + id + '\'' +
-                ", matricule='" + matricule + '\'' +
                 ", dateEmbauche=" + dateEmbauche +
+                ", employe=" + (employe != null ? employe.getId() : "null") +
                 '}';
     }
 }

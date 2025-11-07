@@ -26,6 +26,7 @@ import InventaireMouvements from "../RH/Employe/Mouvements/InventaireMouvements"
 import ArchivesMouvements from "../RH/Employe/Mouvements/ArchivesMouvements";
 import Inscription from "../inscription_user/Inscription";
 import AddManager from "../RH/Employe/Organisation_Hierarchie/AddManager";
+import Employees_static from "../RH/Employe/FicheEmploye/Employees_static";
 
 const RouterRH = () => {
     return (
@@ -36,6 +37,7 @@ const RouterRH = () => {
                 <Route path="employees/:id/documents" element={<EmployeeDocuments />} />
                 <Route path="employees/add" element={<AddEmployee />} />
                 <Route path="employees/archives" element={<ArchivedEmployees />} />
+                <Route path="employees/emp-stat" element={<Employees_static />} />
                 {/* <Route path="employees/inscription" element={<Inscription />} /> */}
                 <Route path="organisation/assignEmp" element={<AssignEmployee />} />
                 <Route path="organisation/addManager" element={<AddManager />}/>

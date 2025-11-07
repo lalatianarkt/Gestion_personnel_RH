@@ -51,8 +51,6 @@ public class DepartementController {
             departement.setNom(updatedDepartement.getNom());
             departement.setDescription(updatedDepartement.getDescription());
             departement.setModifiedAt(updatedDepartement.getModifiedAt());
-            departement.setNbEmploye(updatedDepartement.getNbEmploye());
-            departement.setIdTypeDepartement(updatedDepartement.getIdTypeDepartement());
             Departement saved = departementService.saveDepartement(departement);
             return ResponseEntity.ok(saved);
         } else {

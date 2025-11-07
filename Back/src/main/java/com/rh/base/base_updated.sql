@@ -8,13 +8,52 @@ CREATE TABLE emergency_contact(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE infos_Professionnelles(
+CREATE TABLE infos_professionnelles(
    id VARCHAR(50) ,
-   matricule VARCHAR(50)  NOT NULL,
    date_embauche DATE NOT NULL,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
+   id_manager VARCHAR(50) ,
+   id_departement VARCHAR(50) ,
+   id_poste VARCHAR(50)  NOT NULL,
+   id_type_contrat VARCHAR(50)  NOT NULL,
+   id_employe VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   UNIQUE(matricule)
+   FOREIGN KEY(id_manager) REFERENCES Employe(id),
+   FOREIGN KEY(id_departement) REFERENCES Departement(id),
+   FOREIGN KEY(id_poste) REFERENCES Poste(id),
+   FOREIGN KEY(id_type_contrat) REFERENCES Type_contrat(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id)
 );
+
+CREATE TABLE infos_professionnelles(
+   id VARCHAR(50) ,
+   date_embauche DATE NOT NULL,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
+   id_manager VARCHAR(50) ,
+   id_departement VARCHAR(50) ,
+   id_poste VARCHAR(50)  NOT NULL,
+   id_type_contrat VARCHAR(50)  NOT NULL,
+   id_employe VARCHAR(50)  NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_manager) REFERENCES manager(id),
+   FOREIGN KEY(id_departement) REFERENCES Departement(id),
+   FOREIGN KEY(id_poste) REFERENCES Poste(id),
+   FOREIGN KEY(id_type_contrat) REFERENCES Type_contrat(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id)
+);
+
+ALTER TABLE infos_professionnelles 
+DROP CONSTRAINT manager_employe_id_employe_fkey;
+
+alter table infos_professionnelles 
+add column id_manager VARCHAR(50);
+
+alter table infos_professionnelles 
+add CONSTRAINT manager_
+
+alter table infos_professionnelles drop column id_manager;
 
 CREATE TABLE infos_Administratives(
    id VARCHAR(50) ,
@@ -31,6 +70,7 @@ CREATE TABLE Employe(
    nom VARCHAR(100)  NOT NULL,
    prenom VARCHAR(250)  NOT NULL,
    date_naissance DATE NOT NULL,
+   lieu_naissance VARCHAR(250)  NOT NULL,
    telephone VARCHAR(12)  NOT NULL,
    email VARCHAR(100)  NOT NULL,
    adresse VARCHAR(255)  NOT NULL,
@@ -39,15 +79,15 @@ CREATE TABLE Employe(
    nom_mere VARCHAR(255) ,
    nom_pere VARCHAR(255) ,
    id_emergency_contact VARCHAR(50)  NOT NULL,
-   id_info_pro VARCHAR(50)  NOT NULL,
+   matricule VARCHAR(50)  NOT NULL,
    id_info_admin VARCHAR(50)  NOT NULL,
    id_sexe VARCHAR(50)  NOT NULL,
    id_nationalite VARCHAR(50) not NULL,
+   UNIQUE(matricule),
    FOREIGN KEY(id_sexe) REFERENCES sexe(id),
    PRIMARY KEY(id),
    FOREIGN KEY(id_nationalite) REFERENCES nationalite(id),
    FOREIGN KEY(id_emergency_contact) REFERENCES emergency_contact(id),
-   FOREIGN KEY( id_info_pro) REFERENCES infos_Professionnelles(id),
    FOREIGN KEY(id_info_admin) REFERENCES infos_Administratives(id)
 );
 
@@ -142,12 +182,25 @@ CREATE TABLE Poste_employe(
    FOREIGN KEY(id_employe) REFERENCES Employe(id)
 );
 
+-- CREATE TABLE Type_contrat(
+--    id VARCHAR(50) ,
+--    intitule VARCHAR(50)  NOT NULL,
+--    description VARCHAR(255) ,
+--    PRIMARY KEY(id)
+-- );
+
 CREATE TABLE Type_contrat(
    id VARCHAR(50) ,
    intitule VARCHAR(50)  NOT NULL,
    description VARCHAR(255) ,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
    PRIMARY KEY(id)
 );
+
+alter table Type_contrat add column created_at TIMESTAMP not NULL;
+alter table Type_contrat add column modified_at TIMESTAMP;
+
 
 CREATE TABLE Contrat(
    id VARCHAR(50) ,
@@ -169,35 +222,13 @@ CREATE TABLE situation_familiale(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Type_departement(
-   id VARCHAR(50) ,
-   intitule VARCHAR(150)  NOT NULL,
-   created_at DATE NOT NULL,
-   modified_at DATE,
-   PRIMARY KEY(id)
-);
-
 CREATE TABLE Departement(
    id VARCHAR(50) ,
    nom VARCHAR(50)  NOT NULL,
    description VARCHAR(100) ,
    created_at TIMESTAMP NOT NULL,
    modified_at TIMESTAMP,
-   nb_employe INTEGER NOT NULL,
-   id_type_departement VARCHAR(50)  NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_type_departement) REFERENCES Type_departement(id)
-); 
-
-CREATE TABLE departement_employe(
-   id VARCHAR(50) ,
-   created_at TIMESTAMP NOT NULL,
-   modified_at TIMESTAMP,
-   id_employe VARCHAR(50)  NOT NULL,
-   id_departement VARCHAR(50)  NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_employe) REFERENCES Employe(id),
-   FOREIGN KEY(id_departement) REFERENCES Departement(id)
+   PRIMARY KEY(id)
 );
 
 CREATE TABLE nationalite(
@@ -206,23 +237,51 @@ CREATE TABLE nationalite(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Manager(
+CREATE TABLE manager(
    id VARCHAR(50) ,
-   description VARCHAR(250) ,
-   id_departement VARCHAR(50)  NOT NULL,
+   date_debut DATE NOT NULL,
+   date_fin DATE,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
    id_employe VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_departement) REFERENCES Departement(id),
    FOREIGN KEY(id_employe) REFERENCES Employe(id)
 );
 
-CREATE TABLE manager_employe(
-   id SERIAL,
+CREATE TABLE departement_manager(
+   id VARCHAR(50) ,
+   date_debut DATE NOT NULL,
    date_fin DATE,
-   date_debut DATE,
-   id_manager VARCHAR(50)  NOT NULL,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
+   id_departement VARCHAR(50) ,
+   id_manager VARCHAR(50) ,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_departement) REFERENCES Departement(id),
+   FOREIGN KEY(id_manager) REFERENCES manager(id)
+);
+
+CREATE TABLE Pointage(
+   id VARCHAR(50) ,
+   heure_arrivee TIME NOT NULL,
+   heure_depart TIME NOT NULL,
+   heure_journaliere TIME,
+   date_du_jour DATE NOT NULL,
+   created_at TIMESTAMP NOT NULL,
+   modified_at TIMESTAMP,
    id_employe VARCHAR(50)  NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_manager) REFERENCES Manager(id),
    FOREIGN KEY(id_employe) REFERENCES Employe(id)
+); 
+
+CREATE TABLE Historique_poste(
+   id SERIAL,
+   date_debut DATE,
+   date_fin DATE,
+   date_du_jour DATE,
+   id_employe VARCHAR(50) ,
+   id_poste VARCHAR(50) ,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_employe) REFERENCES Employe(id),
+   FOREIGN KEY(id_poste) REFERENCES Poste(id)
 );

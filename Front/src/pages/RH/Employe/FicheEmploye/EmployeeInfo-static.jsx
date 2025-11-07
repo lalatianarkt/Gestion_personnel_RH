@@ -1,289 +1,181 @@
-// src/pages/EmployeeInfo.jsx
+// src/pages/RH/Employees/Employees.jsx
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { Table, Button, Modal, Form, Input, Select, Space, Popconfirm, message, Avatar, Tooltip } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, UserOutlined } from '@ant-design/icons';
 
-function EmployeeInfo() {
-  // const { id } = useParams();
-  const { id } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [infoType, setInfoType] = useState('personnel');
-  const [employee, setEmployee] = useState(null);
+const { Option } = Select;
 
-  // Données complètes des employés
-  const employeesData = {
-    1: {
-      id: 1,
-      matricule: 'EMP001',
-      nom: 'Dupont',
-      prenom: 'Jean',
-      departement: 'IT',
-      poste: 'Développeur Fullstack',
-      // Informations personnelles
-      personnel: {
-        dateNaissance: '1990-05-15',
-        lieuNaissance: 'Paris',
-        nationalite: 'Française',
-        situationFamiliale: 'Marié',
-        enfants: 2,
-        adresse: '123 Avenue des Champs-Élysées, 75008 Paris',
-        telephonePerso: '+33 6 12 34 56 78',
-        emailPerso: 'jean.dupont.perso@gmail.com'
-      },
-      // Informations administratives
-      administratif: {
-        numeroSecuriteSociale: '1 90 05 15 123 456 78',
-        matriculeInterne: 'INT-2022-001',
-        dateEmbauche: '2022-01-15',
-        typeContrat: 'CDI',
-        dureeContrat: 'Indéterminée',
-        salaireBase: '45000 €',
-        banque: 'BNP Paribas',
-        iban: 'FR76 3000 4000 0100 1234 5678 900'
-      },
-      // Informations professionnelles
-      professionnel: {
-        posteActuel: 'Développeur Fullstack',
-        departement: 'IT',
-        manager: 'Sophie Laurent',
-        datePromotion: '2023-06-01',
-        ancienPoste: 'Développeur Frontend',
-        competences: ['React', 'Node.js', 'TypeScript', 'MongoDB'],
-        formations: ['Certification AWS', 'Formation Agile'],
-        evaluations: ['Excellente - 2023', 'Très bonne - 2022']
-      }
-    },
-    2: {
-      id: 2,
-      matricule: 'EMP002',
-      nom: 'Martin',
-      prenom: 'Marie',
-      departement: 'IT',
-      poste: 'Développeur Fullstack',
-      // Informations personnelles
-      personnel: {
-        dateNaissance: '1990-05-15',
-        lieuNaissance: 'Paris',
-        nationalite: 'Française',
-        situationFamiliale: 'Marié',
-        enfants: 2,
-        adresse: '123 Avenue des Champs-Élysées, 75008 Paris',
-        telephonePerso: '+33 6 12 34 56 78',
-        emailPerso: 'jean.dupont.perso@gmail.com'
-      },
-      // Informations administratives
-      administratif: {
-        numeroSecuriteSociale: '1 90 05 15 123 456 78',
-        matriculeInterne: 'INT-2022-001',
-        dateEmbauche: '2022-01-15',
-        typeContrat: 'CDI',
-        dureeContrat: 'Indéterminée',
-        salaireBase: '45000 €',
-        banque: 'BNP Paribas',
-        iban: 'FR76 3000 4000 0100 1234 5678 900'
-      },
-      // Informations professionnelles
-      professionnel: {
-        posteActuel: 'Développeur Fullstack',
-        departement: 'IT',
-        manager: 'Sophie Laurent',
-        datePromotion: '2023-06-01',
-        ancienPoste: 'Développeur Frontend',
-        competences: ['React', 'Node.js', 'TypeScript', 'MongoDB'],
-        formations: ['Certification AWS', 'Formation Agile'],
-        evaluations: ['Excellente - 2023', 'Très bonne - 2022']
-      }
-    }
-  };
+const Employees = () => {
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
+  // Données mockées
   useEffect(() => {
-    // Récupérer le type d'info depuis la navigation
-    const typeFromNav = location.state?.infoType || 'personnel';
-    setInfoType(typeFromNav);
-    
-    // Récupérer les données de l'employé
-    setEmployee(employeesData[id]);
-  }, [id, location]);
+    setEmployees([
+      { id: 1, nom: 'Dupont Jean', departement: 'IT', poste: 'Développeur Senior', email: 'dupont@exemple.com' },
+      { id: 2, nom: 'Martin Marie', departement: 'Finance', poste: 'Analyste', email: 'martin@exemple.com' },
+      { id: 3, nom: 'Bernard Pierre', departement: 'RH', poste: 'Manager', email: 'bernard@exemple.com' },
+    ]);
+  }, []);
 
-  if (!employee) {
-    return (
-      <div className="container-fluid">
-        <div className="alert alert-warning">Employé non trouvé</div>
-      </div>
-    );
-  }
-
-  const renderInfoContent = () => {
-    switch (infoType) {
-      case 'personnel':
-        return (
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-info text-white">
-                  <h5 className="card-title mb-0">État Civil</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Date de naissance:</strong> {new Date(employee.personnel.dateNaissance).toLocaleDateString('fr-FR')}</p>
-                  <p><strong>Lieu de naissance:</strong> {employee.personnel.lieuNaissance}</p>
-                  <p><strong>Nationalité:</strong> {employee.personnel.nationalite}</p>
-                  <p><strong>Situation familiale:</strong> {employee.personnel.situationFamiliale}</p>
-                  <p><strong>Nombre d'enfants:</strong> {employee.personnel.enfants}</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-info text-white">
-                  <h5 className="card-title mb-0">Coordonnées</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Adresse:</strong> {employee.personnel.adresse}</p>
-                  <p><strong>Téléphone personnel:</strong> {employee.personnel.telephonePerso}</p>
-                  <p><strong>Email personnel:</strong> {employee.personnel.emailPerso}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'administratif':
-        return (
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-warning text-dark">
-                  <h5 className="card-title mb-0">Informations Sociales</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Numéro de sécurité sociale:</strong> {employee.administratif.numeroSecuriteSociale}</p>
-                  <p><strong>Matricule interne:</strong> {employee.administratif.matriculeInterne}</p>
-                </div>
-              </div>
-              <div className="card mt-3">
-                <div className="card-header bg-warning text-dark">
-                  <h5 className="card-title mb-0">Contrat</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Date d'embauche:</strong> {new Date(employee.administratif.dateEmbauche).toLocaleDateString('fr-FR')}</p>
-                  <p><strong>Type de contrat:</strong> {employee.administratif.typeContrat}</p>
-                  <p><strong>Durée:</strong> {employee.administratif.dureeContrat}</p>
-                  <p><strong>Salaire de base:</strong> {employee.administratif.salaireBase}</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-warning text-dark">
-                  <h5 className="card-title mb-0">Informations Bancaires</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Banque:</strong> {employee.administratif.banque}</p>
-                  <p><strong>IBAN:</strong> {employee.administratif.iban}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'professionnel':
-        return (
-          <div className="row">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-success text-white">
-                  <h5 className="card-title mb-0">Poste Actuel</h5>
-                </div>
-                <div className="card-body">
-                  <p><strong>Poste:</strong> {employee.professionnel.posteActuel}</p>
-                  <p><strong>Département:</strong> {employee.professionnel.departement}</p>
-                  <p><strong>Manager:</strong> {employee.professionnel.manager}</p>
-                  <p><strong>Date de promotion:</strong> {new Date(employee.professionnel.datePromotion).toLocaleDateString('fr-FR')}</p>
-                  <p><strong>Ancien poste:</strong> {employee.professionnel.ancienPoste}</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-header bg-success text-white">
-                  <h5 className="card-title mb-0">Compétences</h5>
-                </div>
-                <div className="card-body">
-                  {employee.professionnel.competences.map((competence, index) => (
-                    <span key={index} className="badge bg-primary me-1 mb-1">{competence}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="card mt-3">
-                <div className="card-header bg-success text-white">
-                  <h5 className="card-title mb-0">Évaluations</h5>
-                </div>
-                <div className="card-body">
-                  {employee.professionnel.evaluations.map((evaluation, index) => (
-                    <p key={index} className="mb-1">{evaluation}</p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-
-      default:
-        return <div>Type d'information non reconnu</div>;
-    }
+  // Ajouter un nouvel employé
+  const handleAddEmployee = () => {
+    setSelectedEmployee(null);
+    form.resetFields();
+    setIsModalVisible(true);
   };
+
+  // Modifier un employé existant
+  const handleEditEmployee = (employee) => {
+    setSelectedEmployee(employee);
+    form.setFieldsValue(employee); // pré-remplir le formulaire
+    setIsModalVisible(true);
+  };
+
+  // Supprimer un employé
+  const handleDeleteEmployee = (id) => {
+    setEmployees(prev => prev.filter(emp => emp.id !== id));
+    message.success('Employé supprimé avec succès');
+  };
+
+  // Sauvegarder (ajout ou modification)
+  const handleSaveEmployee = () => {
+    form.validateFields().then(values => {
+      if (selectedEmployee) {
+        // Modification
+        setEmployees(prev => prev.map(emp =>
+          emp.id === selectedEmployee.id ? { ...emp, ...values } : emp
+        ));
+        message.success('Employé modifié avec succès');
+      } else {
+        // Ajout
+        const newEmployee = { id: Date.now(), ...values };
+        setEmployees(prev => [...prev, newEmployee]);
+        message.success('Employé ajouté avec succès');
+      }
+      setIsModalVisible(false);
+      form.resetFields();
+      setSelectedEmployee(null);
+    });
+  };
+
+  // Colonnes du tableau
+  const columns = [
+    {
+      title: 'Employé',
+      dataIndex: 'nom',
+      key: 'nom',
+      render: (nom, record) => (
+        <Space>
+          <Avatar icon={<UserOutlined />} />
+          <div>
+            <div>{nom}</div>
+            <div style={{ fontSize: '12px', color: '#999' }}>
+              {record.poste} - {record.departement}
+            </div>
+          </div>
+        </Space>
+      )
+    },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_, record) => (
+        <Space size="small">
+          <Tooltip title="Modifier">
+            <Button 
+              type="link" 
+              icon={<EditOutlined />}
+              onClick={() => handleEditEmployee(record)}
+            />
+          </Tooltip>
+          <Tooltip title="Supprimer">
+            <Popconfirm
+              title="Supprimer cet employé ?"
+              onConfirm={() => handleDeleteEmployee(record.id)}
+              okText="Oui"
+              cancelText="Non"
+            >
+              <Button type="link" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </Tooltip>
+        </Space>
+      )
+    }
+  ];
 
   return (
-    <div className="employee-info-page">
-      <div className="container-fluid">
-        {/* Header avec navigation */}
-        <div className="row mb-4">
-          <div className="col-12">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <button 
-                  className="btn btn-outline-secondary me-3"
-                  onClick={() => navigate('/dashboard-RH/employees')}
-                >
-                  <i className="bi bi-arrow-left me-1"></i>Retour
-                </button>
-                <h1 className="d-inline-block mb-0">
-                  {employee.prenom} {employee.nom}
-                  <small className="text-muted ms-2">({employee.matricule})</small>
-                </h1>
-              </div>
-              <div className="btn-group">
-                <button
-                  className={`btn ${infoType === 'personnel' ? 'btn-info' : 'btn-outline-info'}`}
-                  onClick={() => setInfoType('personnel')}
-                >
-                  Personnel
-                </button>
-                <button
-                  className={`btn ${infoType === 'administratif' ? 'btn-warning' : 'btn-outline-warning'}`}
-                  onClick={() => setInfoType('administratif')}
-                >
-                  Administratif
-                </button>
-                <button
-                  className={`btn ${infoType === 'professionnel' ? 'btn-success' : 'btn-outline-success'}`}
-                  onClick={() => setInfoType('professionnel')}
-                >
-                  Professionnel
-                </button>
-              </div>
-            </div>
-            <p className="text-muted mt-2">
-              Informations {infoType === 'personnel' ? 'personnelles' : infoType === 'administratif' ? 'administratives' : 'professionnelles'}
-            </p>
-          </div>
-        </div>
+    <div>
+      <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEmployee} style={{ marginBottom: 16 }}>
+        Ajouter un employé
+      </Button>
 
-        {/* Contenu des informations */}
-        {renderInfoContent()}
-      </div>
+      <Table
+        columns={columns}
+        dataSource={employees}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+      />
+
+      {/* Modal pour ajouter/modifier un employé */}
+      <Modal
+        title={selectedEmployee ? 'Modifier l’employé' : 'Ajouter un employé'}
+        open={isModalVisible}
+        onOk={handleSaveEmployee}
+        onCancel={() => {
+          setIsModalVisible(false);
+          form.resetFields();
+          setSelectedEmployee(null);
+        }}
+        width={500}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="nom"
+            label="Nom complet"
+            rules={[{ required: true, message: 'Nom requis' }]}
+          >
+            <Input placeholder="Ex: Dupont Jean" />
+          </Form.Item>
+
+          <Form.Item
+            name="poste"
+            label="Poste"
+            rules={[{ required: true, message: 'Poste requis' }]}
+          >
+            <Input placeholder="Ex: Développeur" />
+          </Form.Item>
+
+          <Form.Item
+            name="departement"
+            label="Département"
+            rules={[{ required: true, message: 'Département requis' }]}
+          >
+            <Select placeholder="Sélectionnez un département">
+              <Option value="IT">IT</Option>
+              <Option value="Finance">Finance</Option>
+              <Option value="RH">RH</Option>
+              <Option value="Marketing">Marketing</Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: 'Email requis' },
+              { type: 'email', message: 'Email invalide' }
+            ]}
+          >
+            <Input placeholder="exemple@domaine.com" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
-}
+};
 
-export default EmployeeInfo;
+export default Employees;

@@ -3,6 +3,7 @@ package com.rh.manage.Dto;
 import com.rh.manage.Model.Departement;
 import com.rh.manage.Model.EmergencyContact;
 import com.rh.manage.Model.Employe;
+import com.rh.manage.Model.HistoriquePoste;
 import com.rh.manage.Model.InfosAdministratives;
 import com.rh.manage.Model.InfosProfessionnelles;
 import com.rh.manage.Model.Nationalite;
@@ -15,9 +16,7 @@ public class EmployeDTO {
     private EmergencyContact emergencyContact;
     private InfosAdministratives infosAdministratives;
     private InfosProfessionnelles infosProfessionnelles;
-    private Departement departement;
-    private Poste poste; 
-    private PosteEmploye posteEmploye; 
+    // private HistoriquePoste historiquePoste; 
     private Nationalite nationalite;
     private Sexe sexe;
 
@@ -57,23 +56,12 @@ public class EmployeDTO {
     public void setEmergencyContact(EmergencyContact emergencyContact) {
         this.emergencyContact = emergencyContact;
     }
-    public Departement getDepartement() {
-        return departement;
-    }
-    public void setDepartement(Departement departement) {
-        this.departement = departement;
-    }
-    public Poste getPoste() {
-        return poste;
-    }
-    public void setPoste(Poste poste) {
-        this.poste = poste;
-    }
-    public PosteEmploye getPosteEmploye() {
-        return posteEmploye;
-    }
-    public void setPosteEmploye(PosteEmploye posteEmploye) {
-        this.posteEmploye = posteEmploye;
-    } 
+    // public HistoriquePoste getHistoriquePoste() {
+    //     return historiquePoste;
+    // }
+    // public void setHistoriquePoste(HistoriquePoste historiquePoste) {
+    //     this.historiquePoste = historiquePoste;
+    // }
+    
     
 }

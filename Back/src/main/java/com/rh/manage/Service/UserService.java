@@ -97,18 +97,18 @@ public class UserService {
         System.out.println("hereeeeeeeeeeeeeeeeeeeeeeeeeeee : " + user.getEmail());
 
         // 2️⃣ Vérifier que le matricule existe
-        Optional<InfosProfessionnelles> infosProOpt = infosProfessionnellesService
-                .findByMatricule(user.getEmploye().getInfosProfessionnelles().getMatricule());
-        if(infosProOpt.isEmpty()) {
-            throw new RuntimeException("Le matricule n'existe pas dans InfosProfessionnelles");
-        }
+        // Optional<InfosProfessionnelles> infosProOpt = infosProfessionnellesService
+        //         .findByMatricule(user.getEmploye().getInfosProfessionnelles().getMatricule());
+        // if(infosProOpt.isEmpty()) {
+        //     throw new RuntimeException("Le matricule n'existe pas dans InfosProfessionnelles");
+        // }
 
-        InfosProfessionnelles infosPro = infosProOpt.get();
+        // InfosProfessionnelles infosPro = infosProOpt.get();
 
         // 3️⃣ Vérifier qu'aucun user n'a déjà cet employé
-        if(userRepository.existsByEmploye_Id(infosPro.getId())) {
-            throw new RuntimeException("Un utilisateur est déjà associé à ce matricule");
-        }
+        // if(userRepository.existsByEmploye_Id(infosPro.getId())) {
+        //     throw new RuntimeException("Un utilisateur est déjà associé à ce matricule");
+        // }
 
         TypeUser typeUser = typeUserService.getTypeUserById(user.getTypeUser().getId()).get();
         user.setTypeUser(typeUser);
@@ -124,7 +124,7 @@ public class UserService {
         System.out.println("email received : " + user.getEmail());
         System.out.println("password received : " + user.getPassword());
         System.out.println("typeUser : " + user.getTypeUser().getCreatedAt());
-        System.out.println("matricule : " + user.getEmploye().getInfosProfessionnelles().getDateEmbauche());
+        // System.out.println("matricule : " + user.getEmploye().getInfosProfessionnelles().getDateEmbauche());
         System.out.println("employé : " + user.getEmploye().getId());
 
 

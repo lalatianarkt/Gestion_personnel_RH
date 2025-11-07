@@ -22,9 +22,9 @@ public class ManagerService {
     @Autowired
     ManagerRepository managerRepository;
 
-    public Manager getManagerParDepartement(String departementId) {
-        return managerRepository.findByDepartementId(departementId).get();
-    }
+    // public Manager getManagerParDepartement(String departementId) {
+    //     return managerRepository.findByDepartementId(departementId).get();
+    // } 
 
     // Récupérer tous les managers
     public List<Manager> getAllManagers() {
@@ -35,6 +35,11 @@ public class ManagerService {
     public Optional<Manager> getManagerById(String id) {
         return managerRepository.findById(id);
     }
+
+    // public Manager getManagerParDepartement(String departementId) {
+    //     return managerRepository.findByDepartementId(departementId).orElse(null);
+    // }
+
 
     // Créer ou mettre à jour un manager
     public Manager saveManager(Manager manager) {

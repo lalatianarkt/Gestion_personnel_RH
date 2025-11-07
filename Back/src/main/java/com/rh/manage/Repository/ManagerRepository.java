@@ -11,5 +11,5 @@ import com.rh.manage.Model.Manager;
 public interface ManagerRepository extends JpaRepository<Manager, String> {
     // Vous pouvez ajouter des méthodes custom si nécessaire, par ex :
     // List<Manager> findByDepartementId(String departementId);
-     Optional<Manager> findByDepartementId(String departementId);
+    //  Optional<Manager> findByDepartementId(String departementId);
 }

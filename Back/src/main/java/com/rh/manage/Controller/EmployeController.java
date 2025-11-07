@@ -1,9 +1,13 @@
 package com.rh.manage.Controller;
 
 import com.rh.manage.Dto.EmployeDTO;
+import com.rh.manage.Dto.EmployeInfosDTO;
 import com.rh.manage.Model.Employe;
+import com.rh.manage.Model.InfosProfessionnelles;
 import com.rh.manage.Service.DepartementService;
 import com.rh.manage.Service.EmployeService;
+import com.rh.manage.Service.InfosProfessionnellesService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -26,24 +30,76 @@ public class EmployeController {
     @Autowired
     private DepartementService departementService;
 
+    @Autowired
+    private InfosProfessionnellesService infosProfessionnellesService;
+
+    // @GetMapping("/getManager")
+    // public ResponseEntity<List<Employe>> getAllManagers() {
+    //     return ResponseEntity.ok(employeService.getAllManagers());
+    // }
+    
+
     // 🔹 Récupérer tous les employés
+    // @GetMapping
+    // public ResponseEntity<List<Employe>> getAllEmployes() {
+    //     System.out.println("All emp " + employeService.getAll());
+    //     return ResponseEntity.ok(employeService.getAll());
+    // }
+
     @GetMapping
-    public ResponseEntity<List<Employe>> getAllEmployes() {
-        System.out.println("All emp " + employeService.getAll());
-        return ResponseEntity.ok(employeService.getAll());
+    public ResponseEntity<List<EmployeInfosDTO>> getAllEmployes() {
+        try {
+            List<EmployeInfosDTO> employesWithInfos = employeService.getAllEmployesWithInfos();
+            System.out.println("Nombre d'employés avec infos: " + employesWithInfos.size());
+            return ResponseEntity.ok(employesWithInfos);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des employés: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getEmployeById(@PathVariable String id) {
+        try {
+
+            EmployeInfosDTO emp = employeService.getEmployeWithInfosById(id);
+            // Optional<Employe> employeOpt = employeService.getById(id);
+            
+            if (emp != null) {
+            //     Employe employe = employeOpt.get();
+                
+            //     // Récupérer InfosProfessionnelles par idEmploye
+            //     Optional<InfosProfessionnelles> infosProOpt = infosProfessionnellesService.getById(id);
+                
+            //     // Créer le DTO
+            //     EmployeInfosDTO employeInfosDTO = new EmployeInfosDTO();
+            //     employeInfosDTO.setEmploye(employe);
+            //     employeInfosDTO.setInfosProfessionnelles(infosProOpt.orElse(null));
+                
+            //     System.out.println("Employé trouvé: " + employe.getId());
+                return ResponseEntity.ok(emp);
+            } else {
+                System.out.println("Employé non trouvé: " + id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employé non trouvé");
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération de l'employé " + id + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la récupération de l'employé");
+        }
     }
 
     // 🔹 Récupérer un employé par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeById(@PathVariable String id) {
-        Optional<Employe> employeOpt = employeService.getById(id);
-        // System.out.println("emp : " + employeOpt.get().getId());
-        if (employeOpt.isPresent()) { 
-            return ResponseEntity.ok(employeOpt.get());
-        } else {
-            return ResponseEntity.status(404).body("Employé non trouvé");
-        }
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<?> getEmployeById(@PathVariable String id) {
+    //     Optional<Employe> employeOpt = employeService.getById(id);
+    //     // System.out.println("emp : " + employeOpt.get().getId());
+    //     if (employeOpt.isPresent()) { 
+    //         return ResponseEntity.ok(employeOpt.get());
+    //     } else {
+    //         return ResponseEntity.status(404).body("Employé non trouvé");
+    //     }
+    // }
 
     // 🔹 Récupérer un employé par email
     @GetMapping("/email/{email}")
@@ -64,6 +120,12 @@ public class EmployeController {
     @PostMapping
     public ResponseEntity<?> saveEmploye(@RequestBody EmployeDTO employeDTO) {
         try {
+
+            // System.out.println("ato++++++++++++++++++++++++++++++++++++++++++++++");
+            // employeDTO.getEmergencyContact().getCreatedAt();
+            // employeDTO.getEmergencyContact().getAdresse();
+           System.out.println("contact 2323 " + employeDTO.getEmergencyContact().getContact());
+            // System.out.println("lala" + employeDTO.getEmergencyContact().getAdresse());     
             employeService.insertionIntegraleEmploye(employeDTO);
             return ResponseEntity.ok("Employé enregistré avec succès");
         } catch (DataAccessException e) {
