@@ -15,15 +15,15 @@ public class InfosProfessionnellesService {
     @Autowired
     private InfosProfessionnellesRepository infosProfessionnellesRepository;
 
-    // ✅ Vérifie si le matricule existe
-    public boolean isMatriculeExists(String matricule) {
-        return infosProfessionnellesRepository.existsByMatricule(matricule);
-    }
+    // // ✅ Vérifie si le matricule existe
+    // public boolean isMatriculeExists(String matricule) {
+    //     return infosProfessionnellesRepository.existsByMatricule(matricule);
+    // }
 
-    // ✅ Cherche une InfosProfessionnelles par son matricule
-    public Optional<InfosProfessionnelles> findByMatricule(String matricule) {
-        return infosProfessionnellesRepository.findByMatricule(matricule);
-    }
+    // // ✅ Cherche une InfosProfessionnelles par son matricule
+    // public Optional<InfosProfessionnelles> findByMatricule(String matricule) {
+    //     return infosProfessionnellesRepository.findByMatricule(matricule);
+    // }
 
     // ✅ Récupérer toutes les InfosProfessionnelles
     public List<InfosProfessionnelles> getAll() {
@@ -33,6 +33,10 @@ public class InfosProfessionnellesService {
     // ✅ Récupérer une InfosProfessionnelles par son ID
     public Optional<InfosProfessionnelles> getById(String id) {
         return infosProfessionnellesRepository.findById(id);
+    }
+
+    public Optional<InfosProfessionnelles> getEmployeById(String id) {
+        return infosProfessionnellesRepository.findByEmployeId(id);
     }
 
     // ✅ Ajouter une nouvelle InfosProfessionnelles

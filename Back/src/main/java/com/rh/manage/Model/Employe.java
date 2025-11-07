@@ -5,6 +5,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -24,6 +25,12 @@ public class Employe {
 
     @Column(name = "date_naissance", nullable = false)
     private LocalDate dateNaissance;
+
+    @Column(name = "lieu_naissance", nullable = false)
+    private String lieuNaissance;
+
+    @Column(name = "matricule", length = 50, nullable = false, unique = true)
+    private String matricule;
 
     @Column(name = "telephone", length = 12, nullable = false)
     private String telephone;
@@ -53,10 +60,6 @@ public class Employe {
     private EmergencyContact emergencyContact;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_info_pro", referencedColumnName = "id", nullable = false)
-    private InfosProfessionnelles infosProfessionnelles;
-
-    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_info_admin", referencedColumnName = "id", nullable = false)
     private InfosAdministratives infosAdministratives;
 
@@ -78,7 +81,7 @@ public class Employe {
                     Nationalite nationalite, 
                     Sexe sexe, 
                     InfosAdministratives infosAdministratives, 
-                    InfosProfessionnelles infosProfessionnelles,
+                    String matricule,
                     EmergencyContact emergencyContact) {
         this.nom = nom;
         this.prenom = prenom;
@@ -91,22 +94,25 @@ public class Employe {
         this.nationalite = nationalite;
         this.sexe = sexe;
         this.infosAdministratives = infosAdministratives;
-        this.infosProfessionnelles = infosProfessionnelles;
+        this.matricule = matricule;
         this.emergencyContact = emergencyContact;
     }
 
-    // === Méthode PrePersist pour initialiser ID et createdAt seulement à l’insertion ===
+    // === Méthode PrePersist pour initialiser ID, matricule et createdAt ===
     @PrePersist
     public void prePersist() {
         if (this.id == null) {
             this.id = generateCustomId(LocalDate.now());
+        }
+        if (this.matricule == null) {
+            this.matricule = generateMatricule();
         }
         if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }
     }
 
-    // ✅ Génération d’un ID du type EMP-20251029-ABC123
+    // ✅ Génération d'un ID du type EMP-20251029-ABC123
     private String generateCustomId(LocalDate date) {
         String datePart = date != null
                 ? date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
@@ -114,6 +120,40 @@ public class Employe {
         String randomPart = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         return "EMP-" + datePart + "-" + randomPart;
     }
+
+    // ✅ Génération d'un matricule du type : MAT-2025-0001
+    private String generateMatricule() {
+        String annee = String.valueOf(Year.now().getValue());
+        
+        // Générer un numéro séquentiel (dans un cas réel, vous devriez récupérer le dernier numéro de la base)
+        String sequence = generateSequenceNumber();
+        
+        return "MAT-" + annee + "-" + sequence;
+    }
+
+    // ✅ Génération du numéro séquentiel (à adapter selon votre logique métier)
+    private String generateSequenceNumber() {
+        // Pour une implémentation simple, on utilise un UUID court
+        // Dans une application réelle, vous devriez récupérer le dernier numéro de la base de données
+        String shortUuid = UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        
+        // Alternative : utiliser un timestamp pour avoir un numéro plus court
+        // String timestampPart = String.valueOf(System.currentTimeMillis()).substring(7, 11);
+        
+        return shortUuid;
+        
+        // Alternative avec un vrai séquentiel (nécessite un service dédié) :
+        // return String.format("%04d", getNextSequenceNumber());
+    }
+
+    /*
+    // Méthode pour récupérer le prochain numéro séquentiel depuis la base
+    private synchronized Long getNextSequenceNumber() {
+        // Implémentation avec un service ou repository pour gérer les séquences
+        // Example: return sequenceService.getNextValue("employee_sequence");
+        return 1L; // À implémenter selon votre architecture
+    }
+    */
 
     // === Getters / Setters ===
     public String getId() { return id; }
@@ -152,9 +192,6 @@ public class Employe {
     public EmergencyContact getEmergencyContact() { return emergencyContact; }
     public void setEmergencyContact(EmergencyContact emergencyContact) { this.emergencyContact = emergencyContact; }
 
-    public InfosProfessionnelles getInfosProfessionnelles() { return infosProfessionnelles; }
-    public void setInfosProfessionnelles(InfosProfessionnelles infosProfessionnelles) { this.infosProfessionnelles = infosProfessionnelles; }
-
     public InfosAdministratives getInfosAdministratives() { return infosAdministratives; }
     public void setInfosAdministratives(InfosAdministratives infosAdministratives) { this.infosAdministratives = infosAdministratives; }
 
@@ -164,12 +201,29 @@ public class Employe {
     public Nationalite getNationalite() { return nationalite; }
     public void setNationalite(Nationalite nationalite) { this.nationalite = nationalite; }
 
+    public String getLieuNaissance() {
+        return lieuNaissance;
+    }
+
+    public void setLieuNaissance(String lieuNaissance) {
+        this.lieuNaissance = lieuNaissance;
+    }
+
+    public String getMatricule() {
+        return matricule;
+    }
+
+    public void setMatricule(String matricule) {
+        this.matricule = matricule;
+    }
+
     @Override
     public String toString() {
         return "Employe{" +
                 "id='" + id + '\'' +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
+                ", matricule='" + matricule + '\'' +
                 ", dateNaissance=" + dateNaissance +
                 ", email='" + email + '\'' +
                 ", createdAt=" + createdAt +

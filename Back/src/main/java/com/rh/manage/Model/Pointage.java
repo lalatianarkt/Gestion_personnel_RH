@@ -1,37 +1,73 @@
 package com.rh.manage.Model;
 
-import java.sql.Date;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
+@Entity
+@Table(name = "Pointage")
 public class Pointage {
-//     CREATE TABLE Pointage(
-//    id VARCHAR(50) ,
-//    heure_arrivee TIME NOT NULL,
-//    heure_depart TIME NOT NULL,
-//    heure_journaliere TIME,
-//    date_du_jour DATE NOT NULL,
-//    id_1 VARCHAR(50)  NOT NULL,
-//    PRIMARY KEY(id),
-//    FOREIGN KEY(id_1) REFERENCES Employe(id)
-// );
+
     @Id
-    @Column(name = "id", length = 50)
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_employe", referencedColumnName = "id")
+    @Column(name = "heure_arrivee", nullable = false)
+    private LocalTime heureArrivee;
+
+    @Column(name = "heure_depart")
+    private LocalTime heureDepart;
+
+    @Column(name = "heure_journaliere")
+    private LocalTime heureJournaliere;
+
+    @Column(name = "date_du_jour", nullable = false)
+    private LocalDate dateDuJour;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "modified_at")
+    private LocalDateTime modifiedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_employe", nullable = false)
     private Employe employe;
-    
 
-    LocalDateTime heureArrivee;
-    LocalDateTime heureDepart; 
-    String heure_journaliere; 
-    Date date_du_jour;
-    // Employe employe; 
+    // Génération automatique de l'ID avant insertion
+    @PrePersist
+    public void prePersist() {
+        if (this.id == null || this.id.isEmpty()) {
+            this.id = "POINT-" + UUID.randomUUID().toString();
+        }
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 
+    // Getters et Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public LocalTime getHeureArrivee() { return heureArrivee; }
+    public void setHeureArrivee(LocalTime heureArrivee) { this.heureArrivee = heureArrivee; }
+
+    public LocalTime getHeureDepart() { return heureDepart; }
+    public void setHeureDepart(LocalTime heureDepart) { this.heureDepart = heureDepart; }
+
+    public LocalTime getHeureJournaliere() { return heureJournaliere; }
+    public void setHeureJournaliere(LocalTime heureJournaliere) { this.heureJournaliere = heureJournaliere; }
+
+    public LocalDate getDateDuJour() { return dateDuJour; }
+    public void setDateDuJour(LocalDate dateDuJour) { this.dateDuJour = dateDuJour; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getModifiedAt() { return modifiedAt; }
+    public void setModifiedAt(LocalDateTime modifiedAt) { this.modifiedAt = modifiedAt; }
+
+    public Employe getEmploye() { return employe; }
+    public void setEmploye(Employe employe) { this.employe = employe; }
 }

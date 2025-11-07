@@ -70,7 +70,7 @@ public class ManagerEmployeService {
 
         // Récupérer la liste des employés de ce manager
         // List<Employe> employes = repository.findEmployesByManagerId(managerId);
-        List<ManagerEmploye> les_emp_par_manager = repository.findByManagerId(managerId);
+        List<ManagerEmploye> les_emp_par_manager = repository.findByManager_Id(managerId);
 
         // Vous pouvez construire la liste de ManagerEmploye avec ces employés si nécessaire
         // Par exemple, créer des objets ManagerEmploye temporaires ou retourner directement les Employe

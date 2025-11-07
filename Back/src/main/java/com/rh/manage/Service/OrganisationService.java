@@ -23,42 +23,52 @@ public class OrganisationService {
     @Autowired
     private ManagerEmployeService managerEmployeService;
 
+    @Autowired
+    private PosteEmployeService posteEmployeService;
+
     // getAllDepartement => List<Departement> les_departements 
         // foreach(Departement dep : les_departements){
         //     Manager manager_de_ce_departement = managerService.getManagerParDepartement();
         //     List<ManagerEmploye> les_manager_employés = managerEmployeService.getEmployeParManager(manager_de_ce_departement).;
         // }                                            
-    public List<OrganisationDTO> getAllOrganisation() {
-        try {
-            List<OrganisationDTO> les_organisations = new ArrayList<>();
-            List<Departement> les_departements = departementService.getAllDepartements();
+    // public List<OrganisationDTO> getAllOrganisation() {
+    //     try {
+    //         List<OrganisationDTO> les_organisations = new ArrayList<>();
+    //         List<Departement> les_departements = departementService.getAllDepartements();
+    //         System.out.println("coucou daholo");
+    //         for (Departement departement : les_departements) {
+    //             OrganisationDTO organisationDTO = new OrganisationDTO();
 
-            for (Departement departement : les_departements) {
-                OrganisationDTO organisationDTO = new OrganisationDTO();
+    //             // Récupération du manager du département
+    //             Manager manager = managerService.getManagerParDepartement(departement.getId());
+    //             System.out.println("departement : " + departement.getId());
+    //             organisationDTO.setDepartement(departement);
+    //             List<ManagerEmploye> les_employes_manager = new ArrayList<>();
+    //             List<PosteEmploye> les_employe_poste = new ArrayList<>();
+    //             if(manager != null){
+    //                 les_employes_manager = managerEmployeService.getEmployeParManager(manager.getId());
+    //                 for (ManagerEmploye chaque_emp : les_employes_manager) {
+    //                     // PosteEmploye poste_emp = posteEmployeService.getByEmployeId(chaque_emp.getEmploye().getId());
+    //                 }
+    //                 System.out.println("ato manager id ++++++++++++++++++++" + manager.getId()); 
+    //                 organisationDTO.setLes_employes_manager(les_employes_manager);
+    //                 organisationDTO.setLes_posteEmploye(les_employe_poste);
+    //             } 
+    //             les_organisations.add(organisationDTO);
 
-                // Récupération du manager du département
-                Manager manager = managerService.getManagerParDepartement(departement.getId());
-                List<ManagerEmploye> les_employes_manager = new ArrayList<>();
-                if(manager != null){
-                    les_employes_manager = managerEmployeService.getEmployeParManager(manager.getId());
-                }
+    //         }
 
-                organisationDTO.setDepartement(departement);
-                organisationDTO.setLes_employes_manager(les_employes_manager);
-                les_organisations.add(organisationDTO);
-            }
+    //         return les_organisations;
 
-            return les_organisations;
+    //     } catch (Exception e) {
+    //         // Log complet de l'erreur
+    //         System.err.println("Erreur lors de la récupération de l'organisation : " + e.getMessage());
+    //         e.printStackTrace();
 
-        } catch (Exception e) {
-            // Log complet de l'erreur
-            System.err.println("Erreur lors de la récupération de l'organisation : " + e.getMessage());
-            e.printStackTrace();
-
-            // Relancer l'exception pour que le contrôleur la gère
-            throw new RuntimeException("Impossible de récupérer les organisations : " + e.getMessage(), e);
-        }
-    }
+    //         // Relancer l'exception pour que le contrôleur la gère
+    //         throw new RuntimeException("Impossible de récupérer les organisations : " + e.getMessage(), e);
+    //     }
+    // }
 
 
 }

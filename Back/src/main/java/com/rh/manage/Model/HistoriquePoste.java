@@ -1,12 +1,7 @@
 package com.rh.manage.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import java.sql.Date;
+import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "historique_poste")
@@ -17,31 +12,47 @@ public class HistoriquePoste {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "id_poste", length = 150)
-    private String idPoste;
-
-    @Column(name = "id_employe", length = 255)
-    private String idEmploye;
-
     @Column(name = "date_debut")
-    private Date dateDebut;
+    private LocalDate dateDebut;
 
     @Column(name = "date_fin")
-    private Date dateFin;
+    private LocalDate dateFin;
 
-    // Constructeur par défaut
+    @Column(name = "date_du_jour")
+    private LocalDate dateDuJour;
+
+    // === RELATIONS AU LIEU DE STRINGS ===
+    
+    @ManyToOne
+    @JoinColumn(name = "id_employe")
+    private Employe employe;
+
+    @ManyToOne
+    @JoinColumn(name = "id_poste")
+    private Poste poste;
+
+    // === CONSTRUCTEURS ===
+
     public HistoriquePoste() {}
 
-    // Constructeur avec paramètres
-    public HistoriquePoste(Long id, String idPoste, String idEmploye, Date dateDebut, Date dateFin) {
-        this.id = id;
-        this.idPoste = idPoste;
-        this.idEmploye = idEmploye;
+    public HistoriquePoste(Employe employe, Poste poste, LocalDate dateDebut, LocalDate dateFin) {
+        this.employe = employe;
+        this.poste = poste;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
+        this.dateDuJour = LocalDate.now();
     }
 
-    // Getters et setters
+    public HistoriquePoste(Employe employe, Poste poste, LocalDate dateDebut, LocalDate dateFin, LocalDate dateDuJour) {
+        this.employe = employe;
+        this.poste = poste;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.dateDuJour = dateDuJour;
+    }
+
+    // === GETTERS / SETTERS ===
+
     public Long getId() {
         return id;
     }
@@ -50,46 +61,55 @@ public class HistoriquePoste {
         this.id = id;
     }
 
-    public String getIdPoste() {
-        return idPoste;
-    }
-
-    public void setIdPoste(String idPoste) {
-        this.idPoste = idPoste;
-    }
-
-    public String getIdEmploye() {
-        return idEmploye;
-    }
-
-    public void setIdEmploye(String idEmploye) {
-        this.idEmploye = idEmploye;
-    }
-
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(Date dateDebut) {
+    public void setDateDebut(LocalDate dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public Date getDateFin() {
+    public LocalDate getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(Date dateFin) {
+    public void setDateFin(LocalDate dateFin) {
         this.dateFin = dateFin;
+    }
+
+    public LocalDate getDateDuJour() {
+        return dateDuJour;
+    }
+
+    public void setDateDuJour(LocalDate dateDuJour) {
+        this.dateDuJour = dateDuJour;
+    }
+
+    public Employe getEmploye() {
+        return employe;
+    }
+
+    public void setEmploye(Employe employe) {
+        this.employe = employe;
+    }
+
+    public Poste getPoste() {
+        return poste;
+    }
+
+    public void setPoste(Poste poste) {
+        this.poste = poste;
     }
 
     @Override
     public String toString() {
         return "HistoriquePoste{" +
                 "id=" + id +
-                ", idPoste='" + idPoste + '\'' +
-                ", idEmploye='" + idEmploye + '\'' +
                 ", dateDebut=" + dateDebut +
                 ", dateFin=" + dateFin +
+                ", dateDuJour=" + dateDuJour +
+                ", employe=" + (employe != null ? employe.getNom() + " " + employe.getPrenom() : "null") +
+                ", poste=" + (poste != null ? poste.getNom() : "null") +
                 '}';
     }
 }

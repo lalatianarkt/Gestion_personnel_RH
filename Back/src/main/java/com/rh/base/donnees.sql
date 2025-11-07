@@ -8,15 +8,6 @@ VALUES
 ('Lala RABEMANANJARA', 'lala.contact@email.com', 'Toamasina');
 
 -- -----------------------------
--- infos_Professionnelles
--- -----------------------------
-INSERT INTO infos_Professionnelles (matricule, date_embauche)
-VALUES
-('MAT001', '2020-01-15'),
-('MAT002', '2019-06-20'),
-('MAT003', '2021-03-05');
-
--- -----------------------------
 -- infos_Administratives
 -- -----------------------------
 INSERT INTO infos_Administratives (num_cnaps, cin, nombre_enfants, situation_familiale)
@@ -237,14 +228,6 @@ VALUES
 ('Veuf(ve)'),
 ('Union libre'),
 ('Séparé(e)');
-
-INSERT INTO Type_departement (intitule, created_at, modified_at)
-VALUES
-('Ressources Humaines', CURRENT_DATE, NULL),
-('Commercial et Marketing', CURRENT_DATE, NULL),
-('Informatique et SI', CURRENT_DATE, NULL),
-('Comptabilite et Finance', CURRENT_DATE, NULL),
-('Technique et Logistique', CURRENT_DATE, NULL);
 
 INSERT INTO departement (description, nom, nb_employe, id_departement, created_at, modified_at)
 VALUES

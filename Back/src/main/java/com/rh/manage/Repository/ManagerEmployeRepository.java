@@ -13,12 +13,12 @@ import java.util.List;
 @Repository
 public interface ManagerEmployeRepository extends JpaRepository<ManagerEmploye, Integer> {
 
-    // List<ManagerEmploye> findByManager_Id(String managerId);
+    List<ManagerEmploye> findByManager_Id(String managerId);
 
     @Query("SELECT me.employe FROM ManagerEmploye me WHERE me.manager.id = :managerId")
     List<Employe> findEmployesByManagerId(@Param("managerId") String managerId);
 
-    @Query("SELECT me FROM ManagerEmploye me WHERE me.manager.id = :managerId")
-    List<ManagerEmploye> findByManagerId(@Param("managerId") String managerId);
+    // @Query("SELECT me FROM ManagerEmploye me WHERE me.manager.id = :managerId")
+    // List<ManagerEmploye> findByManagerId(@Param("managerId") String managerId);
 }
 

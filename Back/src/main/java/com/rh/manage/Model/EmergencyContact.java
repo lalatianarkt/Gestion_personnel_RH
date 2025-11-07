@@ -16,6 +16,9 @@ public class EmergencyContact {
     @Column(name = "id", length = 50)
     private String id;
 
+    @Column(name = "nom", length = 250)
+    private String nom;
+
     @Column(name = "contact", length = 100, nullable = false)
     private String contact;
 
@@ -33,25 +36,29 @@ public class EmergencyContact {
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
 
-    // 🔹 Constructeur par défaut avec génération automatique d’ID lisible
+    // 🔹 Constructeur par défaut
     public EmergencyContact() {
-        this.id = generateCustomId();
     }
 
     // 🔹 Constructeur avec paramètres
-    public EmergencyContact(String contact, String email, String adresse) {
-        this.id = generateCustomId();
+    public EmergencyContact(String contact, String email, String adresse, String nom) {
         this.contact = contact;
         this.email = email;
         this.adresse = adresse;
+        this.nom = nom;
     }
 
-    // 🔹 Génération d’un ID du type EC-YYYYMMDD-XXXXXX
-    private String generateCustomId() {
-        String datePart = LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE); // ex: 20251028
-        String shortUuid = UUID.randomUUID().toString().substring(0, 6);
-        return "EC-" + datePart + "-" + shortUuid;
+    // 🔹 Génération d'un ID du type EC-YYYYMMDD-XXXXXX uniquement avant l'insertion
+    @PrePersist
+    public void generateCustomId() {
+        if (this.id == null) {
+            String datePart = LocalDateTime.now().format(DateTimeFormatter.BASIC_ISO_DATE); // ex: 20251028
+            String shortUuid = UUID.randomUUID().toString().substring(0, 6);
+            this.id = "EC-" + datePart + "-" + shortUuid;
+        }
     }
+
+    
 
     // ⚙️ Getters et Setters
     public String getId() { return id; }
@@ -72,6 +79,14 @@ public class EmergencyContact {
     public LocalDateTime getModifiedAt() { return modifiedAt; }
     public void setModifiedAt(LocalDateTime modifiedAt) { this.modifiedAt = modifiedAt; }
 
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     @Override
     public String toString() {
         return "EmergencyContact{" +
@@ -83,4 +98,6 @@ public class EmergencyContact {
                 ", modifiedAt=" + modifiedAt +
                 '}';
     }
+
+    
 }

@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "departement")
 public class Departement {
-
     @Id
     @Column(name = "id", length = 50)
     private String id;
@@ -28,27 +27,16 @@ public class Departement {
     @Column(name = "modified_at")
     private Timestamp modifiedAt;
 
-    @Column(name = "nb_employe", nullable = false)
-    private Integer nbEmploye;
-
-    // Clé étrangère vers TypeDepartement
-    @ManyToOne
-    @JoinColumn(name = "id_type_departement", referencedColumnName = "id")
-    private TypeDepartement idTypeDepartement;
-
-    // Constructeur par défaut
-    public Departement() {}
+    public Departement() {
+    }
 
     // Constructeur avec paramètres
-    public Departement(String id, String nom, String description, Timestamp createdAt, Timestamp modifiedAt,
-                       Integer nbEmploye, TypeDepartement idTypeDepartement) {
+    public Departement(String id, String nom, String description, Timestamp createdAt, Timestamp modifiedAt) {
         this.id = id;
         this.nom = nom;
         this.description = description;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.nbEmploye = nbEmploye;
-        this.idTypeDepartement = idTypeDepartement;
     }
 
     // Getters et setters
@@ -92,22 +80,6 @@ public class Departement {
         this.modifiedAt = modifiedAt;
     }
 
-    public Integer getNbEmploye() {
-        return nbEmploye;
-    }
-
-    public void setNbEmploye(Integer nbEmploye) {
-        this.nbEmploye = nbEmploye;
-    }
-
-    public TypeDepartement getIdTypeDepartement() {
-        return idTypeDepartement;
-    }
-
-    public void setIdTypeDepartement(TypeDepartement idTypeDepartement) {
-        this.idTypeDepartement = idTypeDepartement;
-    }
-
     @Override
     public String toString() {
         return "Departement{" +
@@ -116,8 +88,6 @@ public class Departement {
                 ", description='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", modifiedAt=" + modifiedAt +
-                ", nbEmploye=" + nbEmploye +
-                ", idTypeDepartement=" + idTypeDepartement +
                 '}';
     }
 }

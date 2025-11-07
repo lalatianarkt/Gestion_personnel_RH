@@ -1,132 +1,135 @@
 // src/pages/RH/Organisation/OrgChart.jsx
-import React, { useState } from 'react';
-import { Tree, TreeNode } from 'react-organizational-chart';
-import { Card, Badge, Avatar, Tooltip } from 'antd';
-import { UserOutlined, TeamOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Tree, TreeNode } from "react-organizational-chart";
+import { Card, Badge, Avatar, Tooltip, Spin, Alert } from "antd";
+import { UserOutlined, TeamOutlined } from "@ant-design/icons";
 import "../../../../assets/css/OrgChart.css";
 
 const OrgChart = () => {
-  const [employees] = useState([
-    { id: 1, nom: 'Dupont Jean', departement: 'IT', manager: 'Sophie Laurent', poste: 'Développeur Senior' },
-    { id: 2, nom: 'Martin Marie', departement: 'IT', manager: 'Sophie Laurent', poste: 'Développeuse Frontend' },
-    { id: 3, nom: 'Bernard Pierre', departement: 'Finance', manager: 'Paul Durand', poste: 'Analyste Financier' },
-    { id: 4, nom: 'Sophie Laurent', departement: 'IT', manager: '', poste: 'Directrice IT' },
-    { id: 5, nom: 'Paul Durand', departement: 'Finance', manager: '', poste: 'Directeur Finance' },
-    { id: 6, nom: 'Thomas Legrand', departement: 'IT', manager: 'Sophie Laurent', poste: 'DevOps Engineer' }
-  ]);
+  const [departements, setDepartements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fonction pour construire la structure hiérarchique
-  const buildHierarchy = () => {
-    const managerMap = new Map();
-    
-    // Créer les nœuds managers
-    employees.forEach(emp => {
-      if (!emp.manager) {
-        managerMap.set(emp.nom, {
-          ...emp,
-          children: []
-        });
+  // 🧠 Charger les données depuis l’API
+  useEffect(() => {
+    const fetchOrganisation = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/organisation");
+        setDepartements(response.data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des données :", err);
+        setError("Impossible de récupérer les données de l'organisation.");
+      } finally {
+        setLoading(false);
       }
-    });
+    };
+    fetchOrganisation();
+  }, []);
 
-    // Ajouter les employés sous leurs managers
-    employees.forEach(emp => {
-      if (emp.manager && managerMap.has(emp.manager)) {
-        managerMap.get(emp.manager).children.push({
-          ...emp,
-          children: []
-        });
-      }
-    });
-
-    return Array.from(managerMap.values());
-  };
-
-  const hierarchy = buildHierarchy();
-
-  // Composant pour un nœud d'employé
-  const EmployeeNode = ({ employee }) => (
-    <Tooltip 
-      title={`${employee.poste} - ${employee.departement}`}
+  // 👤 Composant d’un nœud d’employé
+  const EmployeeNode = ({ employee, isManager }) => (
+    <Tooltip
+      title={`${employee.poste ?? "Employé"} - ${employee.departement ?? ""}`}
       placement="top"
     >
-      <Card 
-        className={`employee-card ${!employee.manager ? 'manager-card' : ''}`}
+      <Card
+        className={`employee-card ${isManager ? "manager-card" : ""}`}
         size="small"
       >
         <div className="employee-content">
-          <Avatar 
-            size={40} 
-            icon={<UserOutlined />} 
+          <Avatar
+            size={40}
+            icon={<UserOutlined />}
             className="employee-avatar"
-            style={{ backgroundColor: !employee.manager ? '#1890ff' : '#52c41a' }}
+            style={{
+              backgroundColor: isManager ? "#1890ff" : "#52c41a",
+            }}
           />
           <div className="employee-info">
-            <div className="employee-name">{employee.nom}</div>
-            <div className="employee-position">{employee.poste}</div>
-            <Badge 
-              count={employee.departement} 
-              style={{ 
-                backgroundColor: employee.departement === 'IT' ? '#1890ff' : '#52c41a',
-                marginTop: '4px'
-              }} 
+            <div className="employee-name">
+              {employee.nom} {employee.prenom}
+            </div>
+            <div className="employee-position">
+              {isManager ? "Manager" : "Employé"}
+            </div>
+            <Badge
+              count={employee.departement ?? ""}
+              style={{
+                backgroundColor: isManager ? "#1890ff" : "#52c41a",
+                marginTop: "4px",
+              }}
             />
-            {employee.children && employee.children.length > 0 && (
-              <div className="team-size">
-                <TeamOutlined /> {employee.children.length} collaborateurs
-              </div>
-            )}
           </div>
         </div>
       </Card>
     </Tooltip>
   );
 
-  // Fonction récursive pour rendre l'arbre
-  const renderTree = (data) => {
-    return data.map((employee) => (
-      <TreeNode 
-        key={employee.id} 
-        label={<EmployeeNode employee={employee} />}
-      >
-        {employee.children && employee.children.length > 0 && renderTree(employee.children)}
-      </TreeNode>
-    ));
+  // 🌲 Rendu récursif d’un manager et ses employés
+  const renderManagerTree = (managerEmployes) => {
+    if (!managerEmployes || managerEmployes.length === 0) return null;
+
+    return managerEmployes.map((relation, index) => {
+      const manager = relation.manager?.employe;
+      const employe = relation.employe;
+
+      if (!manager || !employe) return null;
+
+      return (
+        <Tree
+          key={index}
+          lineWidth="2px"
+          lineColor="#d9d9d9"
+          lineBorderRadius="10px"
+          label={<EmployeeNode employee={manager} isManager={true} />}
+        >
+          <TreeNode label={<EmployeeNode employee={employe} isManager={false} />} />
+        </Tree>
+      );
+    });
   };
+
+  if (loading) return <Spin tip="Chargement de l'organigramme..." />;
+  if (error) return <Alert message={error} type="error" />;
 
   return (
     <div className="org-chart-container">
       <div className="org-chart-header">
         <h1>Organigramme de l'Entreprise</h1>
-        <p>Structure hiérarchique et organisationnelle</p>
+        <p>Structure hiérarchique et organisationnelle par département</p>
       </div>
-      
+
       <div className="org-chart-content">
-        {hierarchy.map((rootEmployee, index) => (
-          <div key={rootEmployee.id} className="department-tree">
+        {departements.map((dep, index) => (
+          <div key={index} className="department-tree">
             <div className="department-header">
-              <h2>Département {rootEmployee.departement}</h2>
+              <h2>{dep.departement.nom}</h2>
+              <p>{dep.departement.description}</p>
             </div>
-            <Tree
-              lineWidth="2px"
-              lineColor="#d9d9d9"
-              lineBorderRadius="10px"
-              label={<EmployeeNode employee={rootEmployee} />}
-            >
-              {rootEmployee.children && renderTree(rootEmployee.children)}
-            </Tree>
+
+            {dep.les_employes_manager && dep.les_employes_manager.length > 0 ? (
+              renderManagerTree(dep.les_employes_manager)
+            ) : (
+              <Alert
+                message="Aucun manager ou employé dans ce département"
+                type="info"
+                showIcon
+                style={{ marginTop: 10 }}
+              />
+            )}
           </div>
         ))}
       </div>
 
       <div className="org-chart-legend">
         <div className="legend-item">
-          <Avatar size={20} style={{ backgroundColor: '#1890ff' }} />
-          <span>Direction</span>
+          <Avatar size={20} style={{ backgroundColor: "#1890ff" }} />
+          <span>Managers</span>
         </div>
         <div className="legend-item">
-          <Avatar size={20} style={{ backgroundColor: '#52c41a' }} />
-          <span>Collaborateurs</span>
+          <Avatar size={20} style={{ backgroundColor: "#52c41a" }} />
+          <span>Employés</span>
         </div>
       </div>
     </div>
